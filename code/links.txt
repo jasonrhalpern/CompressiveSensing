@@ -1,0 +1,2 @@
+Couple of version of CS implementation
+http://dsp.rice.edu/software
