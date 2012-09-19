@@ -2,80 +2,53 @@
 \usepackage[top=2.2cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \usepackage{color}
 
-\title{Title}
-\author{Name}		
-\date{January 26, 2012}					
+\title{Implementing Compressive Sampling Algorithms Across The Cloud}
+\author{Jason Halpern}		
+\date{September 17, 2012}					
 
 \begin{document}
 \maketitle						
 
 \section{Motivation}
 
+The purpose of this project is to explore various implementations of compressive sampling algorithms and to find ways of parallelizing these algorithms across several machines.
 
 \section{Problem Description}
 
+Compressive Sampling is about acquiring and recovering a sparse signal in an efficient manner. It involves finding the number of measurements that are necessary to reconstruct the signal. There are several algorithms that we have in MATLAB for reconstructing these signals, but it is not yet clear which of these algorithms are the most efficient and which of them (if any) can be effectively distributed.
 
 \section{Project Objective}
 
-Describe....
-
-Then List / Summarize objectives
-\begin{itemize}
-	\item apple 
-	\item orange
-\end{itemize}
+The goal of the project is to research and explore several compressive sampling algorithms and to determine which algorithm is the best choice to implement in a distributed manner.  At first, we will attempt to implement the algorithm on a single machine and then we will set up a Hadoop cluster to see how well the algorithm can be distributed.
 
 \section{Tools and Supporting Documentation}
 
-Describe....
+The software that we will use for this project includes Hadoop, MATLAB, Eclipse, a Java Machine Learning Library, Git and Latex. 
 
-Then List / Summarize tools and supporting docs
-\begin{itemize}
-	\item calculator
-	\item pencil  ... just kidding
-\end{itemize}
+In terms of other relevant materials, we will also rely on the MATLAB code related to compressive sampling algorithms that is on the Rice Computer Science website. In addition, we will dig deeper into the research papers associated with the specific algorithms that we are considering implementing.
+
+Depending on our progress, we might also use an Android simulator or the sensor networks to test the distribution of the algorithm.
 
 \section{Deliverables}
 
-Describe.... what should be expected at the end of the semester
+The final deliverables for this project will include a report based on the research and exploration carried out over the course of the semester with regards to compressive sampling algorithms. The report will detail all of the algorithms that we analyzed and the reasons why we chose a specific algorithm to distribute across multiple machines. 
 
-Conclude with a list of deliverables
+In addition, the deliverables will also include the code that we wrote in Java to effectively distribute the algorithm. The deliverable will include the Machine Learning libraries and necessary Hadoop components as well that we needed as part of the development.
 
-\begin{itemize}
-	\item cookie
-	\item code..
-	\item final report and documentation
-\end{itemize}
+\section{Milestones and Deadlines}
 
+September 27th -Ð Decide on a Java Machine learning library to use (i.e. WEKA). Pick the specific compressive sampling algorithms that we will be analyzing and begin reading research papers associated with them.
 
-\section{Time-line}
+October 4th -Ð Write tests cases for the CS algorithms.
 
-The expected / planned milestones
+October 11th -Ð Fully explore and analyze the various compressive sampling algorithms that we have in MATLAB and read the corresponding research papers. Hopefully, by this time we will have chosen a specific algorithm to implement in a distributed fashion. We will have a clear justification for why we chose this specific algorithm as opposed to the other ones that were also part of the discussion. 
 
-\begin{itemize}
-\item{February 20: Literature Survey \& Environment Setup}
-	\begin{itemize}
-		\item Get aware of the tools \& environment. 
-	        \item Familiarize with GIT and \LaTeX
-	\end{itemize}
+October 25th -Ð Implement the algorithm on a standalone Hadoop machine. If we run into complications with the algorithm prior to this deadline, we might want to reevaluate the specific algorithm we have chosen.
 
-\item{September 12: ... some milestone} 
-	\begin{itemize}
-		\item Interface for RF2550 implemented.
-		\item Report issues with the implementation.
-	\end{itemize}
+November 8th -Ð Attempt to distribute the algorithm across an entire Hadoop cluster.  There might be several iterations to this phase of the project as we explore methods for distributing the algorithm.
 
+Novemer 22nd -Ð Optional: Use either the Android simulator or sensor networks and collect signals from these devices and then use our distributed algorithm to recover these signals.
 
-\item{December ...:  Final version}
-	\begin{itemize}
-	\item Prepare final report plan
-	\item Demo Ready
-	\end{itemize}
-
-\item{....: Last day of Classes}
-
-\item{....: Demo Session (tentative)} 
-
-\end{itemize}
+December 13th -Ð Submit final report and other deliverables. There will also be a scheduled presentation or demo.
 
 \end{document}             % End of document.
