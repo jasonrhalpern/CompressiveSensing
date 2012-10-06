@@ -8,13 +8,13 @@ import signals.processing.Decoder;
 import signals.processing.Encoder;
 
 public class Image implements Signal {
-	
+
 	private Matrix signalMatrix;
-	
+
 	public Image(Matrix imageMatrix){
 		this.signalMatrix = imageMatrix;
 	}
-	
+
 	public Matrix getMatrix(){
 		return this.signalMatrix;
 	}
@@ -31,15 +31,15 @@ public class Image implements Signal {
 
 	@Override
 	public void printMatrix() {
-		
+
 		MatrixHelper.printMatrix(signalMatrix);
-		
+
 	}
 
 	@Override
 	//wrapper around Mahout's matrix multiplication function
 	public void multiplyMatrix(Matrix y) {
-		
+
 		signalMatrix = signalMatrix.times(y);
 	}
 }
