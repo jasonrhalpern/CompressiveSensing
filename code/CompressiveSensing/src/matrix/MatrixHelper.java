@@ -138,5 +138,28 @@ public class MatrixHelper {
 			}
 			System.out.println();
 		}
+		System.out.println();
+	}
+	
+	//converts the entire matrix to a single column.
+	//similar to the x = x(:) operation in Matlab.
+	public static Matrix toSingleColumn(Matrix mtrx){
+		
+		//create single column matrix with correct number of rows
+		int numRows = mtrx.columnSize() * mtrx.rowSize();
+		Matrix singleColumnMatrix = new SparseMatrix(numRows, 1);
+		
+		int rowCount = 0;
+		double cellValue = 0;
+		for (int column = 0; column < mtrx.rowSize(); column++) {
+			for (int row = 0; row < mtrx.columnSize(); row++) {
+				cellValue = mtrx.get(row, column);
+				singleColumnMatrix.set(rowCount, 0, cellValue);
+				rowCount++;
+			}
+		}
+		
+		return singleColumnMatrix;
+		
 	}
 }

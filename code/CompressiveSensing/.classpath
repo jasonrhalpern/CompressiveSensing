@@ -5,5 +5,6 @@
 	<classpathentry kind="lib" path="/Users/jasonhalpern/Documents/workspace/trunk/buildtools/target/mahout-buildtools-0.8-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="/Users/jasonhalpern/Documents/workspace/trunk/core/target/mahout-core-0.8-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="/Users/jasonhalpern/Documents/workspace/trunk/math/target/mahout-math-0.8-SNAPSHOT.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

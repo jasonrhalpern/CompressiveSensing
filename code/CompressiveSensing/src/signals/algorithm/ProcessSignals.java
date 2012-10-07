@@ -19,14 +19,9 @@ public class ProcessSignals {
 		Matrix testMatrix = MatrixHelper.getDummyMatrix(TOTAL_ROWS, TOTAL_COLUMNS);
 		Image img = new Image(testMatrix);
 
-		//print the matrix representing the image
-		img.printMatrix();
-		System.out.println();
-
 		//test matrix multiplication by multiplying by itself
 		img.multiplyMatrix(testMatrix);
 		img.printMatrix();
-		System.out.println();
 
 		//test matrix multiplication by multiplying by identity
 		Matrix identityMatrix = MatrixHelper.getIdentityMatrix(TOTAL_ROWS, TOTAL_COLUMNS);
@@ -40,16 +35,13 @@ public class ProcessSignals {
 		//create row vector that is a random permutation of numbers 1 through signal_length
 		Matrix randomMatrix = new SparseMatrix(1, SignalHelper.getSignalLength());
 		randomMatrix = MatrixHelper.randomPermutation(randomMatrix);
-		MatrixHelper.printMatrix(randomMatrix);
 
 		//form a matrix similar to the way Matlab uses randn(x) to create a matrix
 		//based on a normal distribution
 		Matrix gaussDistMatrix = new SparseMatrix(SignalHelper.getSignalSparsity(), 1);
 		gaussDistMatrix = MatrixHelper.randN(gaussDistMatrix);
-		MatrixHelper.printMatrix(gaussDistMatrix);
 
 		signalMatrix = MatrixHelper.setCellValues(signalMatrix, randomMatrix, gaussDistMatrix);
-		MatrixHelper.printMatrix(signalMatrix);
 		
 		//measurements
 		Matrix gaussDistMatrixTwo = new SparseMatrix(SignalHelper.getNumMeasurements(), 
@@ -57,7 +49,14 @@ public class ProcessSignals {
 		gaussDistMatrixTwo = MatrixHelper.randN(gaussDistMatrixTwo);
 		double x = (1 / Math.sqrt(SignalHelper.getNumMeasurements()));
 		Matrix phiMatrix = gaussDistMatrixTwo.times(x);
-		MatrixHelper.printMatrix(phiMatrix);
+		
+		Matrix measurementMatrix = phiMatrix.times(signalMatrix);
+		
+		//reconstruct
+		//??? [xhat, trsh] = cosamp(y,Phi,K,iter); ???
+		SignalHelper.cosampAlgo(measurementMatrix, phiMatrix, 
+								SignalHelper.getSignalSparsity(), 
+								SignalHelper.getNumIterations());
 		
 	}
 }
