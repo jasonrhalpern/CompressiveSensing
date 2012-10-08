@@ -2,6 +2,7 @@ package matrix;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -74,14 +75,14 @@ public class MatrixHelper {
 		//use an array list to build up list of numbers then shuffle it to get a 
 		//random permutation of the list
 		List<Integer> permutationList = new ArrayList<Integer>();
-		for(int index = 0; index < SignalHelper.getSignalLength(); index++){
+		for(int index = 0; index < randomMatrix.columnSize(); index++){
 			permutationList.add(index + 1);
 		}
 		Collections.shuffle(permutationList); //shuffle
 
 		//fill each cell in vector with a number, which will be random
 		//since the list has already been shuffled.
-		for(int index = 0; index < SignalHelper.getSignalLength(); index++){
+		for(int index = 0; index < randomMatrix.columnSize(); index++){
 			randomMatrix.set(0, index, permutationList.get(index));
 		}
 
@@ -151,8 +152,8 @@ public class MatrixHelper {
 		
 		int rowCount = 0;
 		double cellValue = 0;
-		for (int column = 0; column < mtrx.rowSize(); column++) {
-			for (int row = 0; row < mtrx.columnSize(); row++) {
+		for (int column = 0; column < mtrx.columnSize(); column++) {
+			for (int row = 0; row < mtrx.rowSize(); row++) {
 				cellValue = mtrx.get(row, column);
 				singleColumnMatrix.set(rowCount, 0, cellValue);
 				rowCount++;
@@ -161,5 +162,51 @@ public class MatrixHelper {
 		
 		return singleColumnMatrix;
 		
+	}
+	
+	//converts each element in the matrix to its absolute value
+	//similar to Matlab's abs(x) function
+	public static Matrix getAbsMatrix(Matrix mtrx){
+		
+		double cellValue = 0;
+		for (int row = 0; row < mtrx.rowSize(); row++) {
+			for (int column = 0; column < mtrx.columnSize(); column++) {
+				//get a Gaussian random number with mean 0 and standard deviation 1
+				cellValue = mtrx.get(row, column);
+				cellValue = Math.abs(cellValue);
+				mtrx.set(row, column, cellValue);
+			}
+		}
+		
+		return mtrx;
+	}
+	
+	//same at Matlab's sort(matrix, 'descending')
+	//sorts the elements in the specified direction, depending on the value of mode.
+	public static Matrix sortDescending(Matrix mtrx){
+		
+		ArrayList<Double> sortedColumn = new ArrayList<Double>();
+		
+		for (int column = 0; column < mtrx.columnSize(); column++) {
+			//get all the values in this column
+			for (int row = 0; row < mtrx.rowSize(); row++) {
+				sortedColumn.add(mtrx.get(row, column));
+				
+			}
+			//sort them in descending order
+			Collections.sort(sortedColumn, new Comparator<Double>() {
+			    public int compare(Double o1, Double o2) {
+			        return o1.compareTo(o2);
+			    }
+			});
+			//place them back in the column of the matrix
+			for(int i = 0; i < sortedColumn.size(); i++){
+				mtrx.set(i, column, sortedColumn.get(i));
+			}
+			//clear array list before moving on to next column
+			sortedColumn.clear();
+		}
+		
+		return mtrx;
 	}
 }

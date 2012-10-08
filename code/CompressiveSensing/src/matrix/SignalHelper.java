@@ -46,6 +46,17 @@ public class SignalHelper {
 		int verbose = 0;
 		double tolerance = 0.001;
 		Matrix sCosampMatrix = new SparseMatrix(numColumns, 1);
+		sCosampMatrix = MatrixHelper.fillWithZeros(sCosampMatrix);
 		
+		Matrix intermediateMatrix = null;
+		Matrix rCosampMatrix = null;
+		Matrix proxyCosampMatrix = null;
+		while(count <= iterations){
+			//backprojection
+			intermediateMatrix = phiMatrix.times(sCosampMatrix);
+			rCosampMatrix = measurementMatrix.minus(intermediateMatrix);
+			proxyCosampMatrix = phiMatrix.transpose().times(rCosampMatrix);
+			
+		}
 	}
 }
