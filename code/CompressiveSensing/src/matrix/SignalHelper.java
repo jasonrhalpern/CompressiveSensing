@@ -56,6 +56,8 @@ public class SignalHelper {
 			intermediateMatrix = phiMatrix.times(sCosampMatrix);
 			rCosampMatrix = measurementMatrix.minus(intermediateMatrix);
 			proxyCosampMatrix = phiMatrix.transpose().times(rCosampMatrix);
+			proxyCosampMatrix = MatrixHelper.getAbsMatrix(proxyCosampMatrix);
+			proxyCosampMatrix = MatrixHelper.sortDescending(proxyCosampMatrix);
 			
 		}
 	}

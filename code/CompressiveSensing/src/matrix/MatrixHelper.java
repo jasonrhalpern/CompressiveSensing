@@ -185,13 +185,15 @@ public class MatrixHelper {
 	//sorts the elements in the specified direction, depending on the value of mode.
 	public static Matrix sortDescending(Matrix mtrx){
 		
+		Matrix indexMatrix = new SparseMatrix(mtrx.rowSize(), mtrx.columnSize());
 		ArrayList<Double> sortedColumn = new ArrayList<Double>();
+		ArrayList<Double> cloneList = new ArrayList<Double>();
 		
 		for (int column = 0; column < mtrx.columnSize(); column++) {
 			//get all the values in this column
 			for (int row = 0; row < mtrx.rowSize(); row++) {
 				sortedColumn.add(mtrx.get(row, column));
-				
+				cloneList.add(mtrx.get(row, column));
 			}
 			//sort them in descending order
 			Collections.sort(sortedColumn, new Comparator<Double>() {
@@ -199,13 +201,22 @@ public class MatrixHelper {
 			        return o1.compareTo(o2);
 			    }
 			});
-			//place them back in the column of the matrix
+			//place them back in the column of the matrix.
+			//we also need a matrix to track the row that the element was in 
+			//before it was sorted.
 			for(int i = 0; i < sortedColumn.size(); i++){
 				mtrx.set(i, column, sortedColumn.get(i));
+				indexMatrix.set(i, column, (cloneList.indexOf(sortedColumn.get(i))+1));
+				cloneList.set(cloneList.indexOf(sortedColumn.get(i)), null);
 			}
 			//clear array list before moving on to next column
 			sortedColumn.clear();
+			cloneList.clear();
 		}
+		
+		List<Matrix> matrixList = new ArrayList<Matrix>();
+		matrixList.add(mtrx);
+		matrixList.add(indexMatrix);
 		
 		return mtrx;
 	}
