@@ -183,7 +183,7 @@ public class MatrixHelper {
 	
 	//same at Matlab's sort(matrix, 'descending')
 	//sorts the elements in the specified direction, depending on the value of mode.
-	public static Matrix sortDescending(Matrix mtrx){
+	public static List<Matrix> sortDescending(Matrix mtrx){
 		
 		Matrix indexMatrix = new SparseMatrix(mtrx.rowSize(), mtrx.columnSize());
 		ArrayList<Double> sortedColumn = new ArrayList<Double>();
@@ -218,6 +218,52 @@ public class MatrixHelper {
 		matrixList.add(mtrx);
 		matrixList.add(indexMatrix);
 		
-		return mtrx;
+		return matrixList;
+	}
+	
+	//check each cell in the matrix to see if it equals the test value.
+	//1 if not equal, 0 if equal.
+	public static Matrix notEqual(Matrix mtrx, int testValue){
+		
+		Matrix equalityMtrx = new SparseMatrix(mtrx.rowSize(), mtrx.columnSize());
+		int cellValue = 0;
+		for (int row = 0; row < equalityMtrx.rowSize(); row++) {
+			for (int column = 0; column < equalityMtrx.columnSize(); column++) {
+				cellValue = (int) mtrx.get(row, column);
+				if(cellValue == testValue){
+					equalityMtrx.set(row, column, 0);
+				}
+				else{
+					equalityMtrx.set(row, column, 1);
+				}
+			}
+		}
+		return equalityMtrx;
+	}
+	
+	public static Matrix getIndices(Matrix mtrx, int startIndex, int endIndex){
+		
+		int count = 1;
+		int index = 0;
+		int totalIndices = endIndex - startIndex + 1;
+		int totalDimensions = mtrx.rowSize() * mtrx.columnSize();
+		
+		if(endIndex > totalDimensions)
+			return null;
+		
+		Matrix indexMatrix = new SparseMatrix(1, totalIndices);
+		
+		for (int column = 0; column < mtrx.rowSize(); column++) {
+			for (int row = 0; row < mtrx.columnSize(); row++) {
+				if((startIndex <= count) && (count <= endIndex)){
+					indexMatrix.set(0, index, mtrx.get(row, column));
+					index++;
+				}
+				
+				count++;
+			}
+		}
+		
+		return indexMatrix;
 	}
 }

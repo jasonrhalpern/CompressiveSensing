@@ -2,6 +2,9 @@ package tests;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import matrix.MatrixHelper;
 
 import org.apache.mahout.math.Matrix;
@@ -53,6 +56,7 @@ public class SignalTesting {
 	@Test
 	public void sortDescTest(){
 		
+		List<Matrix> list = new ArrayList<Matrix>();
 		Matrix test = new SparseMatrix(4,4);
 		test.set(0, 0, 9);
 		test.set(0, 1, 2);
@@ -63,11 +67,66 @@ public class SignalTesting {
 		test.set(2, 0, 4);
 		test.set(2, 1, 5);
 		test.set(3, 2, 6);
-		test = MatrixHelper.sortDescending(test);
+		list = MatrixHelper.sortDescending(test);
+		test = list.get(0);
 		
 		assertEquals(test.get(3, 0), 9, DELTA);
 		assertEquals(test.get(3, 1), 8, DELTA);
 		assertEquals(test.get(3, 2), 7, DELTA);
 		assertEquals(test.get(2, 2), 6, DELTA);
+	}
+	
+	@Test
+	public void notEqualTest(){
+		
+		Matrix test = new SparseMatrix(7,1);
+		test.set(0, 0, 9);
+		test.set(1, 0, 2);
+		test.set(2, 0, 3);
+		test.set(3, 0, 1);
+		test.set(4, 0, 1);
+		test.set(5, 0, 7);
+		test.set(6, 0, 1);
+		test = MatrixHelper.notEqual(test, 1);
+		
+		assertEquals(test.get(0, 0), 1, DELTA);
+		assertEquals(test.get(1, 0), 1, DELTA);
+		assertEquals(test.get(2, 0), 1, DELTA);
+		assertEquals(test.get(3, 0), 0, DELTA);
+		assertEquals(test.get(4, 0), 0, DELTA);
+		assertEquals(test.get(5, 0), 1, DELTA);
+		assertEquals(test.get(6, 0), 0, DELTA);
+	}
+	
+	@Test
+	public void indexTest(){
+		
+		Matrix test = new SparseMatrix(4,4);
+		test.set(0, 0, 9);
+		test.set(0, 1, 2);
+		test.set(0, 2, 3);
+		test.set(0, 3, 1);
+		test.set(1, 0, 1);
+		test.set(1, 1, 7);
+		test.set(1, 2, 9);
+		test.set(1, 3, 6);
+		test.set(2, 0, 14);
+		test.set(2, 1, 0);
+		test.set(2, 2, 4);
+		test.set(2, 3, 7);
+		test.set(3, 0, 3);
+		test.set(3, 1, 3);
+		test.set(3, 2, 6);
+		test.set(3, 3, 5);
+		test = MatrixHelper.getIndices(test, 4, 11);
+		
+		assertEquals(test.get(0, 0), 3, DELTA);
+		assertEquals(test.get(0, 1), 2, DELTA);
+		assertEquals(test.get(0, 2), 7, DELTA);
+		assertEquals(test.get(0, 3), 0, DELTA);
+		assertEquals(test.get(0, 4), 3, DELTA);
+		assertEquals(test.get(0, 5), 3, DELTA);
+		assertEquals(test.get(0, 6), 9, DELTA);
+		assertEquals(test.get(0, 7), 4, DELTA);
 	}
 }

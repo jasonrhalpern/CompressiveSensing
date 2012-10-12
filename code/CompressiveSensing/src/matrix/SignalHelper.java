@@ -1,5 +1,8 @@
 package matrix;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.mahout.math.Matrix;
 import org.apache.mahout.math.SparseMatrix;
 
@@ -51,14 +54,22 @@ public class SignalHelper {
 		Matrix intermediateMatrix = null;
 		Matrix rCosampMatrix = null;
 		Matrix proxyCosampMatrix = null;
+		Matrix indexMatrix = null;
+		Matrix equalityMatrix = null;
+		Matrix indiceMatrix = null;
+		List<Matrix> matrixList = new ArrayList<Matrix>();
 		while(count <= iterations){
 			//backprojection
 			intermediateMatrix = phiMatrix.times(sCosampMatrix);
 			rCosampMatrix = measurementMatrix.minus(intermediateMatrix);
 			proxyCosampMatrix = phiMatrix.transpose().times(rCosampMatrix);
 			proxyCosampMatrix = MatrixHelper.getAbsMatrix(proxyCosampMatrix);
-			proxyCosampMatrix = MatrixHelper.sortDescending(proxyCosampMatrix);
 			
+			matrixList = MatrixHelper.sortDescending(proxyCosampMatrix);
+			proxyCosampMatrix = matrixList.get(0);
+			indexMatrix = matrixList.get(1);
+			equalityMatrix = MatrixHelper.notEqual(sCosampMatrix, 0);
+			indiceMatrix = MatrixHelper.getIndices(indexMatrix, 1, (2*SignalHelper.getSignalSparsity()));
 		}
 	}
 }
