@@ -70,6 +70,11 @@ public class SignalHelper {
 			indexMatrix = matrixList.get(1);
 			equalityMatrix = MatrixHelper.notEqual(sCosampMatrix, 0);
 			indiceMatrix = MatrixHelper.getIndices(indexMatrix, 1, (2*SignalHelper.getSignalSparsity()));
+			
+			//estimate
+			
+			//prune
+			count++;
 		}
 	}
 }

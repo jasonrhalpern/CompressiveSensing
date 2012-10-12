@@ -253,8 +253,8 @@ public class MatrixHelper {
 		
 		Matrix indexMatrix = new SparseMatrix(1, totalIndices);
 		
-		for (int column = 0; column < mtrx.rowSize(); column++) {
-			for (int row = 0; row < mtrx.columnSize(); row++) {
+		for (int column = 0; column < mtrx.columnSize(); column++) {
+			for (int row = 0; row < mtrx.rowSize(); row++) {
 				if((startIndex <= count) && (count <= endIndex)){
 					indexMatrix.set(0, index, mtrx.get(row, column));
 					index++;

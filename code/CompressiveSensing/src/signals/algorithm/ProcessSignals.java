@@ -59,6 +59,5 @@ public class ProcessSignals {
 								SignalHelper.getSignalSparsity(), 
 								SignalHelper.getNumIterations());
 		
-		
 	}
 }
