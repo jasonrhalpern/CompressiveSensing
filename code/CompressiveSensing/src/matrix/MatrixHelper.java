@@ -111,8 +111,8 @@ public class MatrixHelper {
 	//x is the zeroMatrix, v is our randomMatrix, the right side of the
 	//equation is the gaussMatrix
 	public static Matrix setCellValues(Matrix zeroMatrix, Matrix randomMatrix, 
-										Matrix gaussMatrix){
-		
+			Matrix gaussMatrix){
+
 		int cellNumber = 0;
 		double cellValue = 0;
 		for(int index = 0; index < SignalHelper.getSignalSparsity(); index++){
@@ -120,7 +120,7 @@ public class MatrixHelper {
 			cellValue = gaussMatrix.get(index, 0);
 			zeroMatrix.set(cellNumber, 0, cellValue);
 		}
-		
+
 		return zeroMatrix;
 	}
 
@@ -141,15 +141,15 @@ public class MatrixHelper {
 		}
 		System.out.println();
 	}
-	
+
 	//converts the entire matrix to a single column.
 	//similar to the x = x(:) operation in Matlab.
 	public static Matrix toSingleColumn(Matrix mtrx){
-		
+
 		//create single column matrix with correct number of rows
 		int numRows = mtrx.columnSize() * mtrx.rowSize();
 		Matrix singleColumnMatrix = new SparseMatrix(numRows, 1);
-		
+
 		int rowCount = 0;
 		double cellValue = 0;
 		for (int column = 0; column < mtrx.columnSize(); column++) {
@@ -159,15 +159,15 @@ public class MatrixHelper {
 				rowCount++;
 			}
 		}
-		
+
 		return singleColumnMatrix;
-		
+
 	}
-	
+
 	//converts each element in the matrix to its absolute value
 	//similar to Matlab's abs(x) function
 	public static Matrix getAbsMatrix(Matrix mtrx){
-		
+
 		double cellValue = 0;
 		for (int row = 0; row < mtrx.rowSize(); row++) {
 			for (int column = 0; column < mtrx.columnSize(); column++) {
@@ -177,18 +177,18 @@ public class MatrixHelper {
 				mtrx.set(row, column, cellValue);
 			}
 		}
-		
+
 		return mtrx;
 	}
-	
+
 	//same at Matlab's sort(matrix, 'descending')
 	//sorts the elements in the specified direction, depending on the value of mode.
 	public static List<Matrix> sortDescending(Matrix mtrx){
-		
+
 		Matrix indexMatrix = new SparseMatrix(mtrx.rowSize(), mtrx.columnSize());
 		ArrayList<Double> sortedColumn = new ArrayList<Double>();
 		ArrayList<Double> cloneList = new ArrayList<Double>();
-		
+
 		for (int column = 0; column < mtrx.columnSize(); column++) {
 			//get all the values in this column
 			for (int row = 0; row < mtrx.rowSize(); row++) {
@@ -197,9 +197,9 @@ public class MatrixHelper {
 			}
 			//sort them in descending order
 			Collections.sort(sortedColumn, new Comparator<Double>() {
-			    public int compare(Double o1, Double o2) {
-			        return o1.compareTo(o2);
-			    }
+				public int compare(Double o1, Double o2) {
+					return o1.compareTo(o2);
+				}
 			});
 			//place them back in the column of the matrix.
 			//we also need a matrix to track the row that the element was in 
@@ -213,18 +213,18 @@ public class MatrixHelper {
 			sortedColumn.clear();
 			cloneList.clear();
 		}
-		
+
 		List<Matrix> matrixList = new ArrayList<Matrix>();
 		matrixList.add(mtrx);
 		matrixList.add(indexMatrix);
-		
+
 		return matrixList;
 	}
-	
+
 	//check each cell in the matrix to see if it equals the test value.
 	//1 if not equal, 0 if equal.
 	public static Matrix notEqual(Matrix mtrx, int testValue){
-		
+
 		Matrix equalityMtrx = new SparseMatrix(mtrx.rowSize(), mtrx.columnSize());
 		int cellValue = 0;
 		for (int row = 0; row < equalityMtrx.rowSize(); row++) {
@@ -240,30 +240,71 @@ public class MatrixHelper {
 		}
 		return equalityMtrx;
 	}
-	
+
 	public static Matrix getIndices(Matrix mtrx, int startIndex, int endIndex){
-		
+
 		int count = 1;
 		int index = 0;
 		int totalIndices = endIndex - startIndex + 1;
 		int totalDimensions = mtrx.rowSize() * mtrx.columnSize();
-		
+
 		if(endIndex > totalDimensions)
 			return null;
-		
+
 		Matrix indexMatrix = new SparseMatrix(1, totalIndices);
-		
+
 		for (int column = 0; column < mtrx.columnSize(); column++) {
 			for (int row = 0; row < mtrx.rowSize(); row++) {
 				if((startIndex <= count) && (count <= endIndex)){
 					indexMatrix.set(0, index, mtrx.get(row, column));
 					index++;
 				}
-				
+
 				count++;
 			}
 		}
-		
+
 		return indexMatrix;
+	}
+
+	//similar to Matlab's find(x) function.
+	//locates all nonzero elements of array X, 
+	//and returns the linear indices of those elements in vector ind. 
+	//If X is a row vector, then ind is a row vector; 
+	//otherwise, ind is a column vector. 
+	public static Matrix findNonzero(Matrix equalityMtrx){
+
+		List<Integer> nonZeroCells = new ArrayList<Integer>();
+
+		boolean rowVector = false;
+		if(equalityMtrx.rowSize() == 1){
+			rowVector = true;
+		}
+
+		int count = 1;
+
+		for (int column = 0; column < equalityMtrx.columnSize(); column++) {
+			for (int row = 0; row < equalityMtrx.rowSize(); row++) {
+				if(equalityMtrx.get(row, column) != 0){
+					nonZeroCells.add(count);
+				}
+				count++;
+			}
+		}
+
+		Matrix tempMtrx = null;
+		if(rowVector){
+			tempMtrx = new SparseMatrix(1, count);
+			for(int i = 0; i < nonZeroCells.size(); i++){
+				tempMtrx.set(0, i, nonZeroCells.get(i));
+			}
+		}
+		else{
+			tempMtrx = new SparseMatrix(count, 1);
+			for(int i = 0; i < nonZeroCells.size(); i++){
+				tempMtrx.set(i, 0, nonZeroCells.get(i));
+			}
+		}
+		return tempMtrx;
 	}
 }

@@ -129,4 +129,54 @@ public class SignalTesting {
 		assertEquals(test.get(0, 6), 9, DELTA);
 		assertEquals(test.get(0, 7), 4, DELTA);
 	}
+	
+	@Test
+	public void findNonzerosTest(){
+		
+		Matrix test = new SparseMatrix(4,4);
+		test.set(0, 0, 9);
+		test.set(0, 1, 0);
+		test.set(0, 2, 3);
+		test.set(0, 3, 1);
+		test.set(1, 0, 1);
+		test.set(1, 1, 0);
+		test.set(1, 2, 9);
+		test.set(1, 3, 6);
+		test.set(2, 0, 14);
+		test.set(2, 1, 0);
+		test.set(2, 2, 0);
+		test.set(2, 3, 7);
+		test.set(3, 0, 3);
+		test.set(3, 1, 3);
+		test.set(3, 2, 6);
+		test.set(3, 3, 5);
+		test = MatrixHelper.findNonzero(test);
+		
+		assertEquals(test.get(0, 0), 1, DELTA);
+		assertEquals(test.get(1, 0), 2, DELTA);
+		assertEquals(test.get(2, 0), 3, DELTA);
+		assertEquals(test.get(3, 0), 4, DELTA);
+		assertEquals(test.get(4, 0), 8, DELTA);
+		assertEquals(test.get(5, 0), 9, DELTA);
+		assertEquals(test.get(6, 0), 10, DELTA);
+		assertEquals(test.get(7, 0), 12, DELTA);
+		assertEquals(test.get(8, 0), 13, DELTA);
+		assertEquals(test.get(9, 0), 14, DELTA);
+		assertEquals(test.get(10, 0), 15, DELTA);
+		assertEquals(test.get(11, 0), 16, DELTA);
+		
+		Matrix testTwo = new SparseMatrix(1,5);
+		testTwo.set(0, 0, 9);
+		testTwo.set(0, 1, 0);
+		testTwo.set(0, 2, 3);
+		testTwo.set(0, 3, 1);
+		testTwo.set(0, 4, 1);
+		testTwo = MatrixHelper.findNonzero(testTwo);
+		
+		assertEquals(testTwo.get(0, 0), 1, DELTA);
+		assertEquals(testTwo.get(0, 1), 3, DELTA);
+		assertEquals(testTwo.get(0, 2), 4, DELTA);
+		assertEquals(testTwo.get(0, 3), 5, DELTA);
+		
+	}
 }

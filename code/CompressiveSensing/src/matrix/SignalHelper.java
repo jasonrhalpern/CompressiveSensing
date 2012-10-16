@@ -57,6 +57,7 @@ public class SignalHelper {
 		Matrix indexMatrix = null;
 		Matrix equalityMatrix = null;
 		Matrix indiceMatrix = null;
+		Matrix findMatrix = null;
 		List<Matrix> matrixList = new ArrayList<Matrix>();
 		while(count <= iterations){
 			//backprojection
@@ -70,6 +71,7 @@ public class SignalHelper {
 			indexMatrix = matrixList.get(1);
 			equalityMatrix = MatrixHelper.notEqual(sCosampMatrix, 0);
 			indiceMatrix = MatrixHelper.getIndices(indexMatrix, 1, (2*SignalHelper.getSignalSparsity()));
+			findMatrix = MatrixHelper.findNonzero(equalityMatrix);
 			
 			//estimate
 			
