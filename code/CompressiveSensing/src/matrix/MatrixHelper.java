@@ -307,4 +307,34 @@ public class MatrixHelper {
 		}
 		return tempMtrx;
 	}
+	
+	public static Matrix union(Matrix findMatrix, Matrix indiceMatrix){
+		
+		ArrayList<Double> commonValues = new ArrayList<Double>();
+		for (int row = 0; row < findMatrix.rowSize(); row++) {
+			for (int column = 0; column < findMatrix.columnSize(); column++) {
+				if(!commonValues.contains(findMatrix.get(row, column)))
+					commonValues.add(findMatrix.get(row, column));
+			}
+		}
+		
+		for (int row = 0; row < indiceMatrix.rowSize(); row++) {
+			for (int column = 0; column < indiceMatrix.columnSize(); column++) {
+				if(!commonValues.contains(indiceMatrix.get(row, column)))
+					commonValues.add(indiceMatrix.get(row, column));
+			}
+		}
+		
+		Collections.sort(commonValues,new Comparator<Double>() {
+			public int compare(Double o1, Double o2) {
+				return o1.compareTo(o2);
+			}
+		});
+		
+		Matrix tempMtrx = new SparseMatrix(1, commonValues.size());
+		for(int i = 0; i < commonValues.size(); i++){
+			tempMtrx.set(0, i, commonValues.get(i));
+		}
+		return tempMtrx;
+	}
 }

@@ -179,4 +179,30 @@ public class SignalTesting {
 		assertEquals(testTwo.get(0, 3), 5, DELTA);
 		
 	}
+	
+	@Test
+	public void unionTest(){
+		
+		Matrix test = new SparseMatrix(1,4);
+		test.set(0, 0, 9);
+		test.set(0, 1, 0);
+		test.set(0, 2, 3);
+		test.set(0, 3, 1);
+		
+		Matrix testTwo = new SparseMatrix(1,4);
+		testTwo.set(0, 0, 7);
+		testTwo.set(0, 1, -1);
+		testTwo.set(0, 2, 6);
+		testTwo.set(0, 3, 3);
+		
+		Matrix unionMatrix = MatrixHelper.union(test, testTwo);
+		
+		assertEquals(unionMatrix.get(0, 0), -1, DELTA);
+		assertEquals(unionMatrix.get(0, 1), 0, DELTA);
+		assertEquals(unionMatrix.get(0, 2), 1, DELTA);
+		assertEquals(unionMatrix.get(0, 3), 3, DELTA);
+		assertEquals(unionMatrix.get(0, 4), 6, DELTA);
+		assertEquals(unionMatrix.get(0, 5), 7, DELTA);
+		assertEquals(unionMatrix.get(0, 6), 9, DELTA);
+	}
 }

@@ -58,6 +58,7 @@ public class SignalHelper {
 		Matrix equalityMatrix = null;
 		Matrix indiceMatrix = null;
 		Matrix findMatrix = null;
+		Matrix unionMatrix = null;
 		List<Matrix> matrixList = new ArrayList<Matrix>();
 		while(count <= iterations){
 			//backprojection
@@ -72,7 +73,7 @@ public class SignalHelper {
 			equalityMatrix = MatrixHelper.notEqual(sCosampMatrix, 0);
 			indiceMatrix = MatrixHelper.getIndices(indexMatrix, 1, (2*SignalHelper.getSignalSparsity()));
 			findMatrix = MatrixHelper.findNonzero(equalityMatrix);
-			
+			unionMatrix = MatrixHelper.union(findMatrix, indiceMatrix);
 			//estimate
 			
 			//prune
