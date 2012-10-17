@@ -205,4 +205,42 @@ public class SignalTesting {
 		assertEquals(unionMatrix.get(0, 5), 7, DELTA);
 		assertEquals(unionMatrix.get(0, 6), 9, DELTA);
 	}
+	
+	@Test
+	public void getColumnsTest(){
+		
+		Matrix test = new SparseMatrix(2,4);
+		test.set(0, 0, 9);
+		test.set(0, 1, 0);
+		test.set(0, 2, 3);
+		test.set(0, 3, 1);
+		test.set(1, 0, 3);
+		test.set(1, 1, 7);
+		test.set(1, 2, 4);
+		test.set(1, 3, 8);
+		
+		Matrix testTwo = new SparseMatrix(1, 2);
+		testTwo.set(0, 0, 3);
+		testTwo.set(0, 1, 4);
+		
+		Matrix joinedMatrix = MatrixHelper.getColumns(test, testTwo);
+		
+		assertEquals(joinedMatrix.get(0, 0), 3, DELTA);
+		assertEquals(joinedMatrix.get(0, 1), 1, DELTA);
+		assertEquals(joinedMatrix.get(1, 0), 4, DELTA);
+		assertEquals(joinedMatrix.get(1, 1), 8, DELTA);
+	}
+	
+	@Test
+	public void lengthTest(){
+		
+		Matrix test = new SparseMatrix(2,4);
+		int lengthOne = MatrixHelper.length(test);
+		
+		Matrix testTwo = new SparseMatrix(7, 5);
+		int lengthTwo = MatrixHelper.length(testTwo);
+		
+		assertEquals(lengthOne, 4);
+		assertEquals(lengthTwo, 7);
+	}
 }

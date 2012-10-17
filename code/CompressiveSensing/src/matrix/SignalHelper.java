@@ -59,7 +59,10 @@ public class SignalHelper {
 		Matrix indiceMatrix = null;
 		Matrix findMatrix = null;
 		Matrix unionMatrix = null;
+		Matrix slicedPhiMatrix = null;
+		Matrix slicedPhiTranspose = null;
 		List<Matrix> matrixList = new ArrayList<Matrix>();
+		List<Matrix> cgSolveMatrices = new ArrayList<Matrix>();
 		while(count <= iterations){
 			//backprojection
 			intermediateMatrix = phiMatrix.times(sCosampMatrix);
@@ -74,10 +77,28 @@ public class SignalHelper {
 			indiceMatrix = MatrixHelper.getIndices(indexMatrix, 1, (2*SignalHelper.getSignalSparsity()));
 			findMatrix = MatrixHelper.findNonzero(equalityMatrix);
 			unionMatrix = MatrixHelper.union(findMatrix, indiceMatrix);
+			slicedPhiMatrix = MatrixHelper.getColumns(phiMatrix, unionMatrix);
+			slicedPhiTranspose = slicedPhiMatrix.transpose();
+			cgSolveMatrices = cgSolve(slicedPhiTranspose.times(slicedPhiMatrix), 
+										slicedPhiTranspose.times(measurementMatrix),
+										tolerance, SignalHelper.getMaxIterations(), verbose);
+			
 			//estimate
 			
 			//prune
 			count++;
 		}
+	}
+	
+	public static List<Matrix> cgSolve(Matrix firstMatrix, Matrix secondMatrix,
+										double tolerance, int maxIterations, int verbose){
+		
+		Matrix xMatrix = new SparseMatrix(MatrixHelper.length(secondMatrix), 1);
+		xMatrix = MatrixHelper.fillWithZeros(xMatrix);
+		
+		Matrix rMatrix = secondMatrix;
+		Matrix dMatrix = rMatrix;
+		
+		return null;
 	}
 }

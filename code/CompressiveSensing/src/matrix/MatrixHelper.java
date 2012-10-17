@@ -308,6 +308,7 @@ public class MatrixHelper {
 		return tempMtrx;
 	}
 	
+	//union of two matrices. Doesn't include dupes.
 	public static Matrix union(Matrix findMatrix, Matrix indiceMatrix){
 		
 		ArrayList<Double> commonValues = new ArrayList<Double>();
@@ -336,5 +337,28 @@ public class MatrixHelper {
 			tempMtrx.set(0, i, commonValues.get(i));
 		}
 		return tempMtrx;
+	}
+	
+	public static Matrix getColumns(Matrix phiMatrix, Matrix unionMatrix){
+		
+		Matrix tempMatrix = new SparseMatrix(phiMatrix.rowSize(), unionMatrix.columnSize());
+		for (int index = 0; index < unionMatrix.columnSize(); index++) {
+			for(int row = 0; row < phiMatrix.rowSize(); row++){
+				tempMatrix.set(row, index, phiMatrix.get(row, (int)unionMatrix.get(0, index)-1));
+			}
+		}
+		
+		return tempMatrix;
+	}
+	
+	public static int length(Matrix mtrx){
+		
+		if(mtrx.rowSize() > mtrx.columnSize()){
+			return mtrx.rowSize() ;
+		}
+		else{
+			return mtrx.columnSize();
+		}
+		
 	}
 }
