@@ -243,4 +243,76 @@ public class SignalTesting {
 		assertEquals(lengthOne, 4);
 		assertEquals(lengthTwo, 7);
 	}
+	
+	@Test 
+	public void squareRootTest(){
+		Matrix test = new SparseMatrix(2,2);
+		test.set(0, 0, 1);
+		test.set(0, 1, 4);
+		test.set(1, 0, 9);
+		test.set(1, 1, 16);
+		test = MatrixHelper.squareRoot(test);
+		
+		assertEquals(0, 0, 1);
+		assertEquals(0, 1, 2);
+		assertEquals(1, 0, 3);
+		assertEquals(1, 1, 4);
+	}
+	
+	@Test
+	public void getIndicesTest(){
+		Matrix test = new SparseMatrix(3,3);
+		test.set(0, 0, 1);
+		test.set(0, 1, 4);
+		test.set(0, 2, 5);
+		test.set(1, 0, 9);
+		test.set(1, 1, 16);
+		test.set(1, 2, 3);
+		test.set(2, 0, 8);
+		test.set(2, 1, 0);
+		test.set(2, 2, 2);
+		
+		Matrix indexMatrix = new SparseMatrix(1,3);
+		indexMatrix.set(0, 0, 2);
+		indexMatrix.set(0, 1, 7);
+		indexMatrix.set(0, 2, 5);
+		
+		Matrix tempMatrix = MatrixHelper.getIndices(test, indexMatrix);
+		
+		assertEquals(tempMatrix.get(0,0), 9, DELTA);
+		assertEquals(tempMatrix.get(0,1), 5, DELTA);
+		assertEquals(tempMatrix.get(0,2), 16, DELTA);
+	}
+	
+	@Test 
+	public void modifyColumnTest(){
+		
+		Matrix test = new SparseMatrix(3,3);
+		test.set(0, 0, 1);
+		test.set(0, 1, 4);
+		test.set(0, 2, 5);
+		test.set(1, 0, 9);
+		test.set(1, 1, 16);
+		test.set(1, 2, 3);
+		test.set(2, 0, 8);
+		test.set(2, 1, 0);
+		test.set(2, 2, 2);
+		
+		Matrix indexMatrix = new SparseMatrix(3,1);
+		indexMatrix.set(0, 0, 2);
+		indexMatrix.set(1, 0, 7);
+		indexMatrix.set(2, 0, 5);
+		
+		Matrix newMatrix = MatrixHelper.modifyColumn(test, 3, indexMatrix);
+		assertEquals(newMatrix.get(0,0), 1, DELTA);
+		assertEquals(newMatrix.get(1,0), 9, DELTA);
+		assertEquals(newMatrix.get(2,0), 8, DELTA);
+		assertEquals(newMatrix.get(0,1), 4, DELTA);
+		assertEquals(newMatrix.get(1,1), 16, DELTA);
+		assertEquals(newMatrix.get(2,1), 0, DELTA);
+		assertEquals(newMatrix.get(0,2), 2, DELTA);
+		assertEquals(newMatrix.get(1,2), 7, DELTA);
+		assertEquals(newMatrix.get(2,2), 5, DELTA);
+		
+	}
 }

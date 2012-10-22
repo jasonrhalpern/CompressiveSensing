@@ -123,6 +123,20 @@ public class MatrixHelper {
 
 		return zeroMatrix;
 	}
+	
+	public static Matrix modifyColumn(Matrix originalMtrx, int columnNumber, Matrix mtrx){
+		
+		columnNumber -= 1;
+		double cellValue;
+		
+		Matrix tempMatrix = originalMtrx;
+		for(int row = 0; row < mtrx.rowSize(); row++){
+			cellValue = mtrx.get(row, 0);
+			tempMatrix.set(row, columnNumber, cellValue);
+		}
+		
+		return tempMatrix;
+	}
 
 	//print out the entire matrix
 	public static void printMatrix(Matrix signalMatrix){
@@ -266,6 +280,25 @@ public class MatrixHelper {
 
 		return indexMatrix;
 	}
+	
+	public static Matrix getIndices(Matrix mtrx, Matrix indexMatrix){
+
+		int index = 0;
+
+		Matrix tempMatrix = new SparseMatrix(1, indexMatrix.columnSize());
+		Matrix columnMatrix = MatrixHelper.toSingleColumn(mtrx);
+		int cellValue;
+		double newValue;
+		
+		for (int cell = 0; cell < indexMatrix.columnSize(); cell++) {
+			cellValue = (int)indexMatrix.get(0, cell) - 1;
+			newValue = columnMatrix.get(cellValue, 0);
+			tempMatrix.set(0, index, newValue);
+			index++;
+		}
+
+		return tempMatrix;
+	}
 
 	//similar to Matlab's find(x) function.
 	//locates all nonzero elements of array X, 
@@ -360,5 +393,17 @@ public class MatrixHelper {
 			return mtrx.columnSize();
 		}
 		
+	}
+	
+	public static Matrix squareRoot(Matrix mtrx){
+		
+		Matrix sqRootMatrix = new SparseMatrix(mtrx.rowSize(), mtrx.columnSize());
+		for (int row = 0; row < sqRootMatrix.rowSize(); row++) {
+			for (int column = 0; column < sqRootMatrix.columnSize(); column++) {
+				sqRootMatrix.set(row, column, Math.sqrt(mtrx.get(row, column)));
+			}
+		}
+		return sqRootMatrix;
+	
 	}
 }

@@ -3,8 +3,11 @@ package matrix;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.mahout.math.DiagonalMatrix;
 import org.apache.mahout.math.Matrix;
+import org.apache.mahout.math.QRDecomposition;
 import org.apache.mahout.math.SparseMatrix;
+import org.apache.mahout.math.Vector;
 
 public class SignalHelper {
 
@@ -61,6 +64,12 @@ public class SignalHelper {
 		Matrix unionMatrix = null;
 		Matrix slicedPhiMatrix = null;
 		Matrix slicedPhiTranspose = null;
+		Matrix wCosampMatrix = null;
+		Matrix resMatrix = null;
+		Matrix tempMatrix = null;
+		Matrix slicedbb2Matrix = null;
+		Matrix bb2Matrix = new SparseMatrix(numColumns, 1);
+		int iter = 0;
 		List<Matrix> matrixList = new ArrayList<Matrix>();
 		List<Matrix> cgSolveMatrices = new ArrayList<Matrix>();
 		while(count <= iterations){
@@ -79,14 +88,31 @@ public class SignalHelper {
 			unionMatrix = MatrixHelper.union(findMatrix, indiceMatrix);
 			slicedPhiMatrix = MatrixHelper.getColumns(phiMatrix, unionMatrix);
 			slicedPhiTranspose = slicedPhiMatrix.transpose();
+			
+			//estimate
 			cgSolveMatrices = cgSolve(slicedPhiTranspose.times(slicedPhiMatrix), 
 										slicedPhiTranspose.times(measurementMatrix),
 										tolerance, SignalHelper.getMaxIterations(), verbose);
+			wCosampMatrix = cgSolveMatrices.get(0);
+			resMatrix = cgSolveMatrices.get(1);
+			iter = (int)cgSolveMatrices.get(2).get(0, 0);
 			
-			//estimate
+			bb2Matrix = MatrixHelper.fillWithZeros(bb2Matrix);
+			bb2Matrix = MatrixHelper.setCellValues(bb2Matrix, unionMatrix, wCosampMatrix);
 			
 			//prune
 			count++;
+			tempMatrix = MatrixHelper.getAbsMatrix(bb2Matrix);
+			matrixList = MatrixHelper.sortDescending(tempMatrix);
+			proxyCosampMatrix = matrixList.get(0);
+			indexMatrix = matrixList.get(1);
+			sCosampMatrix = bb2Matrix.times(0);
+			
+			indiceMatrix = MatrixHelper.getIndices(indexMatrix, 1, signalSparsity);
+			slicedbb2Matrix = MatrixHelper.getIndices(bb2Matrix, indiceMatrix);
+			sCosampMatrix = MatrixHelper.setCellValues(sCosampMatrix, indiceMatrix, slicedbb2Matrix);
+			xCosampMatrix = MatrixHelper.modifyColumn(xCosampMatrix, count, sCosampMatrix);
+		
 		}
 	}
 	
@@ -98,6 +124,13 @@ public class SignalHelper {
 		
 		Matrix rMatrix = secondMatrix;
 		Matrix dMatrix = rMatrix;
+		
+		Matrix deltaMatrix = rMatrix.transpose().times(rMatrix);
+		Matrix deltaZeroMatrix = secondMatrix.transpose().times(secondMatrix);
+		
+		int numIters = 0;
+		
+		Matrix bestXMatrix = xMatrix;
 		
 		return null;
 	}
