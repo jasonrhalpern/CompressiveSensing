@@ -68,6 +68,8 @@ public class SignalHelper {
 		Matrix resMatrix = null;
 		Matrix tempMatrix = null;
 		Matrix slicedbb2Matrix = null;
+		Matrix slicedXCosampMatrixOne = null;
+		Matrix slicedXCosampMatrixTwo = null;
 		Matrix bb2Matrix = new SparseMatrix(numColumns, 1);
 		int iter = 0;
 		List<Matrix> matrixList = new ArrayList<Matrix>();
@@ -112,7 +114,8 @@ public class SignalHelper {
 			slicedbb2Matrix = MatrixHelper.getIndices(bb2Matrix, indiceMatrix);
 			sCosampMatrix = MatrixHelper.setCellValues(sCosampMatrix, indiceMatrix, slicedbb2Matrix);
 			xCosampMatrix = MatrixHelper.modifyColumn(xCosampMatrix, count, sCosampMatrix);
-		
+			slicedXCosampMatrixOne = MatrixHelper.getColumn(xCosampMatrix, count);
+			slicedXCosampMatrixTwo = MatrixHelper.getColumn(xCosampMatrix, count - 1);
 		}
 	}
 	

@@ -124,6 +124,29 @@ public class MatrixHelper {
 		return zeroMatrix;
 	}
 	
+	public static double norm(Matrix mtrx){
+		
+		double sum = 0;
+		for(int i = 0; i < mtrx.rowSize(); i++){
+			for(int j = 0; j < mtrx.columnSize(); j++){
+				sum += Math.pow(mtrx.get(i, j), 2);
+			}
+		}
+		return Math.sqrt(sum);
+	}
+	
+	public static Matrix getColumn(Matrix mtrx, int columnNum){
+		
+		Matrix tempMatrix = new SparseMatrix(mtrx.rowSize(), 1);
+		int cellNumber;
+		int column = columnNum - 1;
+		for(int row = 0; row < mtrx.rowSize(); row++){
+			cellNumber = (int)mtrx.get(row, column);
+			tempMatrix.set(row, 0, cellNumber);
+		}
+		return tempMatrix;
+	}
+	
 	public static Matrix modifyColumn(Matrix originalMtrx, int columnNumber, Matrix mtrx){
 		
 		columnNumber -= 1;

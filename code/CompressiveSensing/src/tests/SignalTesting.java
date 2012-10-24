@@ -315,4 +315,47 @@ public class SignalTesting {
 		assertEquals(newMatrix.get(2,2), 5, DELTA);
 		
 	}
+	
+	@Test
+	public void getColumnTest(){
+		
+		Matrix test = new SparseMatrix(3,3);
+		test.set(0, 0, 1);
+		test.set(0, 1, 4);
+		test.set(0, 2, 5);
+		test.set(1, 0, 9);
+		test.set(1, 1, 16);
+		test.set(1, 2, 3);
+		test.set(2, 0, 8);
+		test.set(2, 1, 0);
+		test.set(2, 2, 2);
+		
+		Matrix columnMatrix = MatrixHelper.getColumn(test, 2);
+		assertEquals(columnMatrix.get(0,0), 4, DELTA);
+		assertEquals(columnMatrix.get(1,0), 16, DELTA);
+		assertEquals(columnMatrix.get(2,0), 0, DELTA);
+		
+		Matrix columnMatrixTwo = MatrixHelper.getColumn(test, 1);
+		assertEquals(columnMatrixTwo.get(0,0), 1, DELTA);
+		assertEquals(columnMatrixTwo.get(1,0), 9, DELTA);
+		assertEquals(columnMatrixTwo.get(2,0), 8, DELTA);
+	}
+	
+	@Test
+	public void normTest(){
+		
+		Matrix test = new SparseMatrix(3,3);
+		test.set(0, 0, 1);
+		test.set(0, 1, 4);
+		test.set(0, 2, 5);
+		test.set(1, 0, 9);
+		test.set(1, 1, 16);
+		test.set(1, 2, 3);
+		test.set(2, 0, 8);
+		test.set(2, 1, 0);
+		test.set(2, 2, 2);
+		
+		double sum = MatrixHelper.norm(test);
+		assertEquals(sum, Math.sqrt(456), DELTA);
+	}
 }
