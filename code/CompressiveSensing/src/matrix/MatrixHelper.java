@@ -6,7 +6,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.mahout.math.DiagonalMatrix;
 import org.apache.mahout.math.Matrix;
+import org.apache.mahout.math.QRDecomposition;
 import org.apache.mahout.math.SparseMatrix;
 
 public class MatrixHelper {
@@ -123,9 +125,9 @@ public class MatrixHelper {
 
 		return zeroMatrix;
 	}
-	
+
 	public static double norm(Matrix mtrx){
-		
+
 		double sum = 0;
 		for(int i = 0; i < mtrx.rowSize(); i++){
 			for(int j = 0; j < mtrx.columnSize(); j++){
@@ -134,9 +136,9 @@ public class MatrixHelper {
 		}
 		return Math.sqrt(sum);
 	}
-	
+
 	public static Matrix getColumn(Matrix mtrx, int columnNum){
-		
+
 		Matrix tempMatrix = new SparseMatrix(mtrx.rowSize(), 1);
 		int cellNumber;
 		int column = columnNum - 1;
@@ -146,18 +148,18 @@ public class MatrixHelper {
 		}
 		return tempMatrix;
 	}
-	
+
 	public static Matrix modifyColumn(Matrix originalMtrx, int columnNumber, Matrix mtrx){
-		
+
 		columnNumber -= 1;
 		double cellValue;
-		
+
 		Matrix tempMatrix = originalMtrx;
 		for(int row = 0; row < mtrx.rowSize(); row++){
 			cellValue = mtrx.get(row, 0);
 			tempMatrix.set(row, columnNumber, cellValue);
 		}
-		
+
 		return tempMatrix;
 	}
 
@@ -303,7 +305,7 @@ public class MatrixHelper {
 
 		return indexMatrix;
 	}
-	
+
 	public static Matrix getIndices(Matrix mtrx, Matrix indexMatrix){
 
 		int index = 0;
@@ -312,7 +314,7 @@ public class MatrixHelper {
 		Matrix columnMatrix = MatrixHelper.toSingleColumn(mtrx);
 		int cellValue;
 		double newValue;
-		
+
 		for (int cell = 0; cell < indexMatrix.columnSize(); cell++) {
 			cellValue = (int)indexMatrix.get(0, cell) - 1;
 			newValue = columnMatrix.get(cellValue, 0);
@@ -363,10 +365,10 @@ public class MatrixHelper {
 		}
 		return tempMtrx;
 	}
-	
+
 	//union of two matrices. Doesn't include dupes.
 	public static Matrix union(Matrix findMatrix, Matrix indiceMatrix){
-		
+
 		ArrayList<Double> commonValues = new ArrayList<Double>();
 		for (int row = 0; row < findMatrix.rowSize(); row++) {
 			for (int column = 0; column < findMatrix.columnSize(); column++) {
@@ -374,52 +376,52 @@ public class MatrixHelper {
 					commonValues.add(findMatrix.get(row, column));
 			}
 		}
-		
+
 		for (int row = 0; row < indiceMatrix.rowSize(); row++) {
 			for (int column = 0; column < indiceMatrix.columnSize(); column++) {
 				if(!commonValues.contains(indiceMatrix.get(row, column)))
 					commonValues.add(indiceMatrix.get(row, column));
 			}
 		}
-		
+
 		Collections.sort(commonValues,new Comparator<Double>() {
 			public int compare(Double o1, Double o2) {
 				return o1.compareTo(o2);
 			}
 		});
-		
+
 		Matrix tempMtrx = new SparseMatrix(1, commonValues.size());
 		for(int i = 0; i < commonValues.size(); i++){
 			tempMtrx.set(0, i, commonValues.get(i));
 		}
 		return tempMtrx;
 	}
-	
+
 	public static Matrix getColumns(Matrix phiMatrix, Matrix unionMatrix){
-		
+
 		Matrix tempMatrix = new SparseMatrix(phiMatrix.rowSize(), unionMatrix.columnSize());
 		for (int index = 0; index < unionMatrix.columnSize(); index++) {
 			for(int row = 0; row < phiMatrix.rowSize(); row++){
 				tempMatrix.set(row, index, phiMatrix.get(row, (int)unionMatrix.get(0, index)-1));
 			}
 		}
-		
+
 		return tempMatrix;
 	}
-	
+
 	public static int length(Matrix mtrx){
-		
+
 		if(mtrx.rowSize() > mtrx.columnSize()){
 			return mtrx.rowSize() ;
 		}
 		else{
 			return mtrx.columnSize();
 		}
-		
+
 	}
-	
+
 	public static Matrix squareRoot(Matrix mtrx){
-		
+
 		Matrix sqRootMatrix = new SparseMatrix(mtrx.rowSize(), mtrx.columnSize());
 		for (int row = 0; row < sqRootMatrix.rowSize(); row++) {
 			for (int column = 0; column < sqRootMatrix.columnSize(); column++) {
@@ -427,6 +429,6 @@ public class MatrixHelper {
 			}
 		}
 		return sqRootMatrix;
-	
+
 	}
 }

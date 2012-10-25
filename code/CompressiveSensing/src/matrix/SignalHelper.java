@@ -71,6 +71,8 @@ public class SignalHelper {
 		Matrix slicedXCosampMatrixOne = null;
 		Matrix slicedXCosampMatrixTwo = null;
 		Matrix bb2Matrix = new SparseMatrix(numColumns, 1);
+		double normOne = 0;
+		double normTwo = 0;
 		int iter = 0;
 		List<Matrix> matrixList = new ArrayList<Matrix>();
 		List<Matrix> cgSolveMatrices = new ArrayList<Matrix>();
@@ -116,11 +118,19 @@ public class SignalHelper {
 			xCosampMatrix = MatrixHelper.modifyColumn(xCosampMatrix, count, sCosampMatrix);
 			slicedXCosampMatrixOne = MatrixHelper.getColumn(xCosampMatrix, count);
 			slicedXCosampMatrixTwo = MatrixHelper.getColumn(xCosampMatrix, count - 1);
+			normOne = MatrixHelper.norm(slicedXCosampMatrixOne.minus(slicedXCosampMatrixTwo));
+			normTwo = MatrixHelper.norm(slicedXCosampMatrixOne);
+			if(normOne < (.01* normTwo)){
+				break;
+			}
 		}
 	}
 	
 	public static List<Matrix> cgSolve(Matrix firstMatrix, Matrix secondMatrix,
 										double tolerance, int maxIterations, int verbose){
+		
+		List<Matrix> matrixList = new ArrayList<Matrix>();
+		Matrix temp = new SparseMatrix(1, 1);
 		
 		Matrix xMatrix = new SparseMatrix(MatrixHelper.length(secondMatrix), 1);
 		xMatrix = MatrixHelper.fillWithZeros(xMatrix);
@@ -134,7 +144,37 @@ public class SignalHelper {
 		int numIters = 0;
 		
 		Matrix bestXMatrix = xMatrix;
+		Matrix bestResMatrix = MatrixHelper.squareRoot(deltaMatrix/deltaZeroMatrix);
+		Matrix qMatrix = null;
+		Matrix alphaMatrix = null;
+		Matrix deltaOldMatrix = null;
+		Matrix betaMatrix = null;
+		while((numIters < maxIterations) && (deltaMatrix > (Math.pow(tolerance, 2) * deltaZeroMatrix))){
+			qMatrix = firstMatrix.times(dMatrix);
+			alphaMatrix = deltaMatrix/(dMatrix.transpose().times(qMatrix));
+			xMatrix = xMatrix.plus((alphaMatrix.times(dMatrix)));
+			if(((numIters+1)%50) == 0){
+				rMatrix = secondMatrix.minus(firstMatrix.times(xMatrix));
+			}
+			else{
+				rMatrix = rMatrix.minus(alphaMatrix.times(qMatrix));
+			}
+			deltaOldMatrix = deltaMatrix;
+			deltaMatrix = rMatrix.transpose().times(rMatrix);
+			betaMatrix = deltaMatrix/deltaOldMatrix;
+			dMatrix = rMatrix.plus(betaMatrix.times(dMatrix));
+			numIters++;
+			if(MatrixHelper.squareRoot(delta/delta0) < bestResMatrix){
+				bestXMatrix = xMatrix;
+				bestResMatrix = MatrixHelper.squareRoot(delta/delta0) ;
+			}
+		}
+		temp.set(0, 0, numIters);
+		matrixList.add(bestXMatrix);
+		matrixList.add(bestResMatrix);
+		matrixList.add(temp);
 		
-		return null;
+		
+		return matrixList;
 	}
 }

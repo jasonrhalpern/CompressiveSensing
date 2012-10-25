@@ -51,10 +51,8 @@ public class ProcessSignals {
 		Matrix phiMatrix = gaussDistMatrixTwo.times(x);
 		
 		Matrix measurementMatrix = phiMatrix.times(signalMatrix);
-			
 		
 		//reconstruct
-		//??? [xhat, trsh] = cosamp(y,Phi,K,iter); ???
 		SignalHelper.cosampAlgo(measurementMatrix, phiMatrix, 
 								SignalHelper.getSignalSparsity(), 
 								SignalHelper.getNumIterations());
