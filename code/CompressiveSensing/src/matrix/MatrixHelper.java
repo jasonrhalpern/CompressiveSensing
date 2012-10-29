@@ -6,9 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
-import org.apache.mahout.math.DiagonalMatrix;
 import org.apache.mahout.math.Matrix;
-import org.apache.mahout.math.QRDecomposition;
 import org.apache.mahout.math.SparseMatrix;
 
 public class MatrixHelper {
@@ -400,9 +398,11 @@ public class MatrixHelper {
 	public static Matrix getColumns(Matrix phiMatrix, Matrix unionMatrix){
 
 		Matrix tempMatrix = new SparseMatrix(phiMatrix.rowSize(), unionMatrix.columnSize());
+		int column;
 		for (int index = 0; index < unionMatrix.columnSize(); index++) {
+			column = (int)unionMatrix.get(0, index) - 1;
 			for(int row = 0; row < phiMatrix.rowSize(); row++){
-				tempMatrix.set(row, index, phiMatrix.get(row, (int)unionMatrix.get(0, index)-1));
+				tempMatrix.set(row, index, phiMatrix.get(row, column));
 			}
 		}
 
@@ -430,5 +430,33 @@ public class MatrixHelper {
 		}
 		return sqRootMatrix;
 
+	}
+	
+	//remove all columns after and including the final column parameter
+	public static Matrix removeColumns(Matrix mtrx, int finalColumn){
+
+		Matrix tempMatrix = new SparseMatrix(mtrx.rowSize(), finalColumn-1);
+		for (int row = 0; row < mtrx.rowSize(); row++) {
+			for (int column = 0; column < mtrx.columnSize(); column++) {
+				if((column+1) < finalColumn){
+					tempMatrix.set(row, column, mtrx.get(row, column));
+				}
+			}
+		}
+		return tempMatrix;
+
+	}
+	
+	//return a matrix that only contains the last column
+	//of the matrix that is passed in
+	public static Matrix getLastColumn(Matrix mtrx){
+		
+		int lastColumn = mtrx.columnSize() - 1;
+		
+		Matrix tempMatrix = new SparseMatrix(mtrx.rowSize(), 1);
+		for (int row = 0; row < mtrx.rowSize(); row++) {
+			tempMatrix.set(row, 0, mtrx.get(row, lastColumn));
+		}
+		return tempMatrix;
 	}
 }

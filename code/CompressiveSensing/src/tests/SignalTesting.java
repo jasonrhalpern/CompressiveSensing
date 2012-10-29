@@ -220,15 +220,15 @@ public class SignalTesting {
 		test.set(1, 3, 8);
 		
 		Matrix testTwo = new SparseMatrix(1, 2);
-		testTwo.set(0, 0, 3);
-		testTwo.set(0, 1, 4);
+		testTwo.set(0, 0, 1);
+		testTwo.set(0, 1, 2);
 		
 		Matrix joinedMatrix = MatrixHelper.getColumns(test, testTwo);
 		
-		assertEquals(joinedMatrix.get(0, 0), 3, DELTA);
-		assertEquals(joinedMatrix.get(0, 1), 1, DELTA);
-		assertEquals(joinedMatrix.get(1, 0), 4, DELTA);
-		assertEquals(joinedMatrix.get(1, 1), 8, DELTA);
+		assertEquals(joinedMatrix.get(0, 0), 9, DELTA);
+		assertEquals(joinedMatrix.get(0, 1), 0, DELTA);
+		assertEquals(joinedMatrix.get(1, 0), 3, DELTA);
+		assertEquals(joinedMatrix.get(1, 1), 7, DELTA);
 	}
 	
 	@Test
@@ -357,5 +357,48 @@ public class SignalTesting {
 		
 		double sum = MatrixHelper.norm(test);
 		assertEquals(sum, Math.sqrt(456), DELTA);
+	}
+	
+	@Test
+	public void removeColumnsTest(){
+		Matrix test = new SparseMatrix(3,3);
+		test.set(0, 0, 1);
+		test.set(0, 1, 4);
+		test.set(0, 2, 5);
+		test.set(1, 0, 9);
+		test.set(1, 1, 16);
+		test.set(1, 2, 3);
+		test.set(2, 0, 8);
+		test.set(2, 1, 0);
+		test.set(2, 2, 2);
+	
+		
+		Matrix newMatrix = MatrixHelper.removeColumns(test, 3);
+		assertEquals(newMatrix.get(0,0), 1, DELTA);
+		assertEquals(newMatrix.get(0,1), 4, DELTA);
+		assertEquals(newMatrix.get(1,0), 9, DELTA);
+		assertEquals(newMatrix.get(1,1), 16, DELTA);
+		assertEquals(newMatrix.get(2,0), 8, DELTA);
+		assertEquals(newMatrix.get(2,1), 0, DELTA);
+	}
+	
+	@Test
+	public void getLastColumnTest(){
+		Matrix test = new SparseMatrix(3,3);
+		test.set(0, 0, 1);
+		test.set(0, 1, 4);
+		test.set(0, 2, 5);
+		test.set(1, 0, 9);
+		test.set(1, 1, 16);
+		test.set(1, 2, 3);
+		test.set(2, 0, 8);
+		test.set(2, 1, 0);
+		test.set(2, 2, 2);
+	
+		
+		Matrix newMatrix = MatrixHelper.getLastColumn(test);
+		assertEquals(newMatrix.get(0,0), 5, DELTA);
+		assertEquals(newMatrix.get(1,0), 3, DELTA);
+		assertEquals(newMatrix.get(2,0), 2, DELTA);
 	}
 }

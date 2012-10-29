@@ -1,5 +1,8 @@
 package signals.algorithm;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import matrix.MatrixHelper;
 import matrix.SignalHelper;
 
@@ -52,10 +55,13 @@ public class ProcessSignals {
 		
 		Matrix measurementMatrix = phiMatrix.times(signalMatrix);
 		
+		List<Matrix> finalMatrices = new ArrayList<Matrix>();
 		//reconstruct
-		SignalHelper.cosampAlgo(measurementMatrix, phiMatrix, 
+		finalMatrices = SignalHelper.cosampAlgo(measurementMatrix, phiMatrix, 
 								SignalHelper.getSignalSparsity(), 
 								SignalHelper.getNumIterations());
+		Matrix xHat = finalMatrices.get(0);
+		Matrix trash = finalMatrices.get(0);
 		
 	}
 }
