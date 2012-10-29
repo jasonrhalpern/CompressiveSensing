@@ -235,7 +235,7 @@ public class MatrixHelper {
 			//sort them in descending order
 			Collections.sort(sortedColumn, new Comparator<Double>() {
 				public int compare(Double o1, Double o2) {
-					return o1.compareTo(o2);
+					return o2.compareTo(o1);
 				}
 			});
 			//place them back in the column of the matrix.
@@ -288,12 +288,12 @@ public class MatrixHelper {
 		if(endIndex > totalDimensions)
 			return null;
 
-		Matrix indexMatrix = new SparseMatrix(1, totalIndices);
+		Matrix indexMatrix = new SparseMatrix(totalIndices, 1);
 
 		for (int column = 0; column < mtrx.columnSize(); column++) {
 			for (int row = 0; row < mtrx.rowSize(); row++) {
 				if((startIndex <= count) && (count <= endIndex)){
-					indexMatrix.set(0, index, mtrx.get(row, column));
+					indexMatrix.set(index, 0, mtrx.get(row, column));
 					index++;
 				}
 
@@ -308,7 +308,7 @@ public class MatrixHelper {
 
 		int index = 0;
 
-		Matrix tempMatrix = new SparseMatrix(1, indexMatrix.columnSize());
+		Matrix tempMatrix = new SparseMatrix(indexMatrix.columnSize(), 1);
 		Matrix columnMatrix = MatrixHelper.toSingleColumn(mtrx);
 		int cellValue;
 		double newValue;
@@ -316,7 +316,7 @@ public class MatrixHelper {
 		for (int cell = 0; cell < indexMatrix.columnSize(); cell++) {
 			cellValue = (int)indexMatrix.get(0, cell) - 1;
 			newValue = columnMatrix.get(cellValue, 0);
-			tempMatrix.set(0, index, newValue);
+			tempMatrix.set(index, 0, newValue);
 			index++;
 		}
 
@@ -349,17 +349,21 @@ public class MatrixHelper {
 		}
 
 		Matrix tempMtrx = null;
-		if(rowVector){
-			tempMtrx = new SparseMatrix(1, count);
+		count -= 1;
+		if(rowVector && (nonZeroCells.size() != 0)){
+			tempMtrx = new SparseMatrix(1, nonZeroCells.size());
 			for(int i = 0; i < nonZeroCells.size(); i++){
 				tempMtrx.set(0, i, nonZeroCells.get(i));
 			}
 		}
-		else{
-			tempMtrx = new SparseMatrix(count, 1);
+		else if (nonZeroCells.size() != 0){
+			tempMtrx = new SparseMatrix(nonZeroCells.size(), 1);
 			for(int i = 0; i < nonZeroCells.size(); i++){
 				tempMtrx.set(i, 0, nonZeroCells.get(i));
 			}
+		}
+		else{
+			tempMtrx = new SparseMatrix(0, 0);
 		}
 		return tempMtrx;
 	}
@@ -388,21 +392,22 @@ public class MatrixHelper {
 			}
 		});
 
-		Matrix tempMtrx = new SparseMatrix(1, commonValues.size());
+		Matrix tempMtrx = new SparseMatrix(commonValues.size(), 1);
 		for(int i = 0; i < commonValues.size(); i++){
-			tempMtrx.set(0, i, commonValues.get(i));
+			tempMtrx.set(i, 0, commonValues.get(i));
 		}
 		return tempMtrx;
 	}
 
 	public static Matrix getColumns(Matrix phiMatrix, Matrix unionMatrix){
-
-		Matrix tempMatrix = new SparseMatrix(phiMatrix.rowSize(), unionMatrix.columnSize());
+		Matrix tempMatrix = new SparseMatrix(phiMatrix.rowSize(), unionMatrix.rowSize());
 		int column;
-		for (int index = 0; index < unionMatrix.columnSize(); index++) {
-			column = (int)unionMatrix.get(0, index) - 1;
+		for (int index = 0; index < unionMatrix.rowSize(); index++) {
+			column = (int)unionMatrix.get(index, 0) - 1;
 			for(int row = 0; row < phiMatrix.rowSize(); row++){
-				tempMatrix.set(row, index, phiMatrix.get(row, column));
+				if(column >= 0){
+					tempMatrix.set(row, index, phiMatrix.get(row, column));
+				}
 			}
 		}
 

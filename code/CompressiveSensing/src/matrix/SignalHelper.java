@@ -42,12 +42,12 @@ public class SignalHelper {
 									int signalSparsity, int iterations){
 		
 		measurementMatrix = MatrixHelper.toSingleColumn(measurementMatrix);
+		
 		int numRows = phiMatrix.rowSize();
 		int numColumns = phiMatrix.columnSize();
 		
 		Matrix xCosampMatrix = new SparseMatrix(numColumns, iterations);
 		xCosampMatrix = MatrixHelper.fillWithZeros(xCosampMatrix);
-		
 		
 		int count = 1;
 		int verbose = 0;
@@ -88,11 +88,18 @@ public class SignalHelper {
 			matrixList = MatrixHelper.sortDescending(proxyCosampMatrix);
 			proxyCosampMatrix = matrixList.get(0);
 			indexMatrix = matrixList.get(1);
+
 			equalityMatrix = MatrixHelper.notEqual(sCosampMatrix, 0);
 			indiceMatrix = MatrixHelper.getIndices(indexMatrix, 1, (2*SignalHelper.getSignalSparsity()));
+			
 			findMatrix = MatrixHelper.findNonzero(equalityMatrix);
 			unionMatrix = MatrixHelper.union(findMatrix, indiceMatrix);
+			
 			slicedPhiMatrix = MatrixHelper.getColumns(phiMatrix, unionMatrix);
+			System.out.println("SLICED PHI MATRIX");
+			MatrixHelper.printMatrix(slicedPhiMatrix);
+			System.out.println("NROWS = " + slicedPhiMatrix.rowSize());
+			System.out.println("NCOLS = " + slicedPhiMatrix.columnSize());
 			slicedPhiTranspose = slicedPhiMatrix.transpose();
 			
 			//estimate
@@ -112,6 +119,7 @@ public class SignalHelper {
 			matrixList = MatrixHelper.sortDescending(tempMatrix);
 			proxyCosampMatrix = matrixList.get(0);
 			indexMatrix = matrixList.get(1);
+			
 			sCosampMatrix = bb2Matrix.times(0);
 			
 			indiceMatrix = MatrixHelper.getIndices(indexMatrix, 1, signalSparsity);

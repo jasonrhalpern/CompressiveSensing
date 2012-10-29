@@ -17,20 +17,18 @@ public class ProcessSignals {
 	private static int TOTAL_COLUMNS = 4;
 
 	public static void main(String[] args){
-
+		/*
 		//form a testing image
 		Matrix testMatrix = MatrixHelper.getDummyMatrix(TOTAL_ROWS, TOTAL_COLUMNS);
 		Image img = new Image(testMatrix);
 
 		//test matrix multiplication by multiplying by itself
 		img.multiplyMatrix(testMatrix);
-		img.printMatrix();
 
 		//test matrix multiplication by multiplying by identity
 		Matrix identityMatrix = MatrixHelper.getIdentityMatrix(TOTAL_ROWS, TOTAL_COLUMNS);
 		img.multiplyMatrix(identityMatrix);
-		img.printMatrix();
-
+	*/
 		//generate signal to test algorithm
 		Matrix signalMatrix = new SparseMatrix(SignalHelper.getSignalLength(), 1);
 		signalMatrix = MatrixHelper.fillWithZeros(signalMatrix);
@@ -38,7 +36,7 @@ public class ProcessSignals {
 		//create row vector that is a random permutation of numbers 1 through signal_length
 		Matrix randomMatrix = new SparseMatrix(1, SignalHelper.getSignalLength());
 		randomMatrix = MatrixHelper.randomPermutation(randomMatrix);
-
+		
 		//form a matrix similar to the way Matlab uses randn(x) to create a matrix
 		//based on a normal distribution
 		Matrix gaussDistMatrix = new SparseMatrix(SignalHelper.getSignalSparsity(), 1);
@@ -61,7 +59,7 @@ public class ProcessSignals {
 								SignalHelper.getSignalSparsity(), 
 								SignalHelper.getNumIterations());
 		Matrix xHat = finalMatrices.get(0);
-		Matrix trash = finalMatrices.get(0);
+		Matrix trash = finalMatrices.get(1);
 		
 	}
 }

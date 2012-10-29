@@ -70,10 +70,10 @@ public class SignalTesting {
 		list = MatrixHelper.sortDescending(test);
 		test = list.get(0);
 		
-		assertEquals(test.get(3, 0), 9, DELTA);
-		assertEquals(test.get(3, 1), 8, DELTA);
-		assertEquals(test.get(3, 2), 7, DELTA);
-		assertEquals(test.get(2, 2), 6, DELTA);
+		assertEquals(test.get(0, 0), 9, DELTA);
+		assertEquals(test.get(0, 1), 8, DELTA);
+		assertEquals(test.get(0, 2), 7, DELTA);
+		assertEquals(test.get(1, 2), 6, DELTA);
 	}
 	
 	@Test
@@ -121,13 +121,13 @@ public class SignalTesting {
 		test = MatrixHelper.getIndices(test, 4, 11);
 		
 		assertEquals(test.get(0, 0), 3, DELTA);
-		assertEquals(test.get(0, 1), 2, DELTA);
-		assertEquals(test.get(0, 2), 7, DELTA);
-		assertEquals(test.get(0, 3), 0, DELTA);
-		assertEquals(test.get(0, 4), 3, DELTA);
-		assertEquals(test.get(0, 5), 3, DELTA);
-		assertEquals(test.get(0, 6), 9, DELTA);
-		assertEquals(test.get(0, 7), 4, DELTA);
+		assertEquals(test.get(1, 0), 2, DELTA);
+		assertEquals(test.get(2, 0), 7, DELTA);
+		assertEquals(test.get(3, 0), 0, DELTA);
+		assertEquals(test.get(4, 0), 3, DELTA);
+		assertEquals(test.get(5, 0), 3, DELTA);
+		assertEquals(test.get(6, 0), 9, DELTA);
+		assertEquals(test.get(7, 0), 4, DELTA);
 	}
 	
 	@Test
@@ -198,12 +198,12 @@ public class SignalTesting {
 		Matrix unionMatrix = MatrixHelper.union(test, testTwo);
 		
 		assertEquals(unionMatrix.get(0, 0), -1, DELTA);
-		assertEquals(unionMatrix.get(0, 1), 0, DELTA);
-		assertEquals(unionMatrix.get(0, 2), 1, DELTA);
-		assertEquals(unionMatrix.get(0, 3), 3, DELTA);
-		assertEquals(unionMatrix.get(0, 4), 6, DELTA);
-		assertEquals(unionMatrix.get(0, 5), 7, DELTA);
-		assertEquals(unionMatrix.get(0, 6), 9, DELTA);
+		assertEquals(unionMatrix.get(1, 0), 0, DELTA);
+		assertEquals(unionMatrix.get(2, 0), 1, DELTA);
+		assertEquals(unionMatrix.get(3, 0), 3, DELTA);
+		assertEquals(unionMatrix.get(4, 0), 6, DELTA);
+		assertEquals(unionMatrix.get(5, 0), 7, DELTA);
+		assertEquals(unionMatrix.get(6, 0), 9, DELTA);
 	}
 	
 	@Test
@@ -219,9 +219,9 @@ public class SignalTesting {
 		test.set(1, 2, 4);
 		test.set(1, 3, 8);
 		
-		Matrix testTwo = new SparseMatrix(1, 2);
+		Matrix testTwo = new SparseMatrix(2, 1);
 		testTwo.set(0, 0, 1);
-		testTwo.set(0, 1, 2);
+		testTwo.set(1, 0, 2);
 		
 		Matrix joinedMatrix = MatrixHelper.getColumns(test, testTwo);
 		
@@ -280,8 +280,8 @@ public class SignalTesting {
 		Matrix tempMatrix = MatrixHelper.getIndices(test, indexMatrix);
 		
 		assertEquals(tempMatrix.get(0,0), 9, DELTA);
-		assertEquals(tempMatrix.get(0,1), 5, DELTA);
-		assertEquals(tempMatrix.get(0,2), 16, DELTA);
+		assertEquals(tempMatrix.get(1,0), 5, DELTA);
+		assertEquals(tempMatrix.get(2,0), 16, DELTA);
 	}
 	
 	@Test 
