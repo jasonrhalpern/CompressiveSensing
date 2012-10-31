@@ -109,6 +109,11 @@ public class SignalHelper {
 			bb2Matrix = MatrixHelper.fillWithZeros(bb2Matrix);
 
 			bb2Matrix = MatrixHelper.setCellValues(bb2Matrix, unionMatrix, wCosampMatrix);
+			System.out.println("COUNT ="+ count);
+			System.out.println("BB2  MATRIX");
+			MatrixHelper.printMatrix(bb2Matrix);
+			System.out.println("ROWS = " + bb2Matrix.rowSize());
+			System.out.println("COLUMNS = " + bb2Matrix.columnSize());
 
 			//prune
 			count++;
