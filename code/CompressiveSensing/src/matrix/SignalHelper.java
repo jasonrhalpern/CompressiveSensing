@@ -32,29 +32,29 @@ public class SignalHelper {
 	public static int getNumIterations(){
 		return NUM_ITERATIONS;
 	}
-	
+
 	public static int getMaxIterations(){
 		return MAX_ITERATIONS;
 	}
-	
+
 	//implementation of cosamp algorithm
 	public static List<Matrix> cosampAlgo(Matrix measurementMatrix, Matrix phiMatrix,
-									int signalSparsity, int iterations){
-		
+			int signalSparsity, int iterations){
+
 		measurementMatrix = MatrixHelper.toSingleColumn(measurementMatrix);
-		
+
 		int numRows = phiMatrix.rowSize();
 		int numColumns = phiMatrix.columnSize();
-		
+
 		Matrix xCosampMatrix = new SparseMatrix(numColumns, iterations);
 		xCosampMatrix = MatrixHelper.fillWithZeros(xCosampMatrix);
-		
-		int count = 1;
+
+		int count = 0;
 		int verbose = 0;
 		double tolerance = 0.001;
 		Matrix sCosampMatrix = new SparseMatrix(numColumns, 1);
 		sCosampMatrix = MatrixHelper.fillWithZeros(sCosampMatrix);
-		
+
 		Matrix intermediateMatrix = null;
 		Matrix rCosampMatrix = null;
 		Matrix proxyCosampMatrix = null;
@@ -66,7 +66,7 @@ public class SignalHelper {
 		Matrix slicedPhiMatrix = null;
 		Matrix slicedPhiTranspose = null;
 		Matrix wCosampMatrix = null;
-		double resMatrix;
+		double res;
 		Matrix tempMatrix = null;
 		Matrix slicedbb2Matrix = null;
 		Matrix slicedXCosampMatrixOne = null;
@@ -74,97 +74,101 @@ public class SignalHelper {
 		Matrix bb2Matrix = new SparseMatrix(numColumns, 1);
 		double normOne = 0;
 		double normTwo = 0;
-		int iter = 0;
+		int iterz = 0;
 		List<Matrix> matrixList = new ArrayList<Matrix>();
 		List<Matrix> cgSolveMatrices = new ArrayList<Matrix>();
 		List<Matrix> finalMatrices = new ArrayList<Matrix>();
-		while(count <= iterations){
+		while(count < iterations){
 			//backprojection
 			intermediateMatrix = phiMatrix.times(sCosampMatrix);
 			rCosampMatrix = measurementMatrix.minus(intermediateMatrix);
 			proxyCosampMatrix = phiMatrix.transpose().times(rCosampMatrix);
 			proxyCosampMatrix = MatrixHelper.getAbsMatrix(proxyCosampMatrix);
-			
+
 			matrixList = MatrixHelper.sortDescending(proxyCosampMatrix);
 			proxyCosampMatrix = matrixList.get(0);
 			indexMatrix = matrixList.get(1);
 
 			equalityMatrix = MatrixHelper.notEqual(sCosampMatrix, 0);
 			indiceMatrix = MatrixHelper.getIndices(indexMatrix, 1, (2*SignalHelper.getSignalSparsity()));
-			
+
 			findMatrix = MatrixHelper.findNonzero(equalityMatrix);
 			unionMatrix = MatrixHelper.union(findMatrix, indiceMatrix);
-			
+
 			slicedPhiMatrix = MatrixHelper.getColumns(phiMatrix, unionMatrix);
-			System.out.println("SLICED PHI MATRIX");
-			MatrixHelper.printMatrix(slicedPhiMatrix);
-			System.out.println("NROWS = " + slicedPhiMatrix.rowSize());
-			System.out.println("NCOLS = " + slicedPhiMatrix.columnSize());
 			slicedPhiTranspose = slicedPhiMatrix.transpose();
-			
+
 			//estimate
 			cgSolveMatrices = cgSolve(slicedPhiTranspose.times(slicedPhiMatrix), 
-										slicedPhiTranspose.times(measurementMatrix),
-										tolerance, SignalHelper.getMaxIterations(), verbose);
+					slicedPhiTranspose.times(measurementMatrix),
+					tolerance, SignalHelper.getMaxIterations(), verbose);
 			wCosampMatrix = cgSolveMatrices.get(0);
-			resMatrix = cgSolveMatrices.get(1).get(0, 0);
-			iter = (int)cgSolveMatrices.get(2).get(0, 0);
-			
+			res= cgSolveMatrices.get(1).get(0, 0);
+			iterz = (int)cgSolveMatrices.get(2).get(0, 0);
+
 			bb2Matrix = MatrixHelper.fillWithZeros(bb2Matrix);
+
 			bb2Matrix = MatrixHelper.setCellValues(bb2Matrix, unionMatrix, wCosampMatrix);
-			
+
 			//prune
 			count++;
-			tempMatrix = MatrixHelper.getAbsMatrix(bb2Matrix);
+			tempMatrix = MatrixHelper.copyMatrix(bb2Matrix);
+			tempMatrix = MatrixHelper.getAbsMatrix(tempMatrix);
 			matrixList = MatrixHelper.sortDescending(tempMatrix);
 			proxyCosampMatrix = matrixList.get(0);
 			indexMatrix = matrixList.get(1);
-			
+
 			sCosampMatrix = bb2Matrix.times(0);
-			
+
 			indiceMatrix = MatrixHelper.getIndices(indexMatrix, 1, signalSparsity);
 			slicedbb2Matrix = MatrixHelper.getIndices(bb2Matrix, indiceMatrix);
 			sCosampMatrix = MatrixHelper.setCellValues(sCosampMatrix, indiceMatrix, slicedbb2Matrix);
 			xCosampMatrix = MatrixHelper.modifyColumn(xCosampMatrix, count, sCosampMatrix);
-			slicedXCosampMatrixOne = MatrixHelper.getColumn(xCosampMatrix, count);
-			slicedXCosampMatrixTwo = MatrixHelper.getColumn(xCosampMatrix, count - 1);
-			normOne = MatrixHelper.norm(slicedXCosampMatrixOne.minus(slicedXCosampMatrixTwo));
-			normTwo = MatrixHelper.norm(slicedXCosampMatrixOne);
-			if(normOne < (.01* normTwo)){
-				break;
+			System.out.println("X COSAMP MATRIX");
+			MatrixHelper.printMatrix(xCosampMatrix);
+			System.out.println("ROWS = " + xCosampMatrix.rowSize());
+			System.out.println("COLUMNS = " + xCosampMatrix.columnSize());
+			if(count < 10){
+				slicedXCosampMatrixOne = MatrixHelper.getColumn(xCosampMatrix, count);
+				slicedXCosampMatrixTwo = MatrixHelper.getColumn(xCosampMatrix, count - 1);
+				normOne = MatrixHelper.norm(slicedXCosampMatrixOne.minus(slicedXCosampMatrixTwo));
+				normTwo = MatrixHelper.norm(slicedXCosampMatrixOne);
+				if(normOne < (.01* normTwo)){
+					break;
+				}
 			}
 		}
 		count++;
 		xCosampMatrix = MatrixHelper.removeColumns(xCosampMatrix, count);
-		
+
 		Matrix xHatMatrix = new SparseMatrix(xCosampMatrix.rowSize(), 1);
 		xHatMatrix = MatrixHelper.getLastColumn(xCosampMatrix);
-		
+
 		finalMatrices.add(xCosampMatrix);
 		finalMatrices.add(xHatMatrix);
-		
+
 		return finalMatrices;
 	}
-	
+
 	public static List<Matrix> cgSolve(Matrix firstMatrix, Matrix secondMatrix,
-										double tolerance, int maxIterations, int verbose){
-		
+			double tolerance, int maxIterations, int verbose){
+
 		List<Matrix> matrixList = new ArrayList<Matrix>();
 		Matrix temp = new SparseMatrix(1, 1);
-		
+
 		Matrix xMatrix = new SparseMatrix(MatrixHelper.length(secondMatrix), 1);
 		xMatrix = MatrixHelper.fillWithZeros(xMatrix);
-		
+
 		Matrix rMatrix = secondMatrix;
 		Matrix dMatrix = rMatrix;
-		
+
 		Matrix deltaMatrix = rMatrix.transpose().times(rMatrix);
 		double delta = deltaMatrix.get(0, 0);
 		Matrix deltaZeroMatrix = secondMatrix.transpose().times(secondMatrix);
 		double deltaZero = deltaZeroMatrix.get(0, 0);
-		
+
 		int numIters = 0;
-		
+
 		Matrix bestXMatrix = xMatrix;
 		double bestRes = Math.sqrt(delta/deltaZero);
 		Matrix bestResMatrix = new SparseMatrix(1, 1);;
@@ -192,14 +196,15 @@ public class SignalHelper {
 				bestXMatrix = xMatrix;
 				bestRes = Math.sqrt(delta/deltaZero) ;
 			}
+
 		}
 		temp.set(0, 0, numIters);
 		bestResMatrix.set(0, 0, bestRes);
 		matrixList.add(bestXMatrix);
 		matrixList.add(bestResMatrix);
 		matrixList.add(temp);
-		
-		
+
+
 		return matrixList;
 	}
 }

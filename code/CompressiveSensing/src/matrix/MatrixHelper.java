@@ -115,13 +115,43 @@ public class MatrixHelper {
 
 		int cellNumber = 0;
 		double cellValue = 0;
-		for(int index = 0; index < SignalHelper.getSignalSparsity(); index++){
-			cellNumber = (int) randomMatrix.get(0, index);
+		for(int index = 0; index < randomMatrix.rowSize(); index++){
+			cellNumber = (int) randomMatrix.get(index, 0) - 1;
 			cellValue = gaussMatrix.get(index, 0);
 			zeroMatrix.set(cellNumber, 0, cellValue);
 		}
 
 		return zeroMatrix;
+	}
+
+	//x is the zeroMatrix, v is our randomMatrix, the right side of the
+	//equation is the gaussMatrix
+	/*public static Matrix setCellValues(Matrix zeroMatrix, Matrix randomMatrix, 
+			Matrix gaussMatrix){
+
+		int cellNumber = 0;
+		double cellValue = 0;
+		for(int index = 0; index < SignalHelper.getSignalSparsity(); index++){
+			cellNumber = (int) randomMatrix.get(index, 0);
+			cellValue = gaussMatrix.get(index, 0);
+			zeroMatrix.set(cellNumber, 0, cellValue);
+		}
+
+		return zeroMatrix;
+	}*/
+	
+	public static Matrix copyMatrix(Matrix mtrx){
+		
+		Matrix tempMatrix = new SparseMatrix(mtrx.rowSize(), mtrx.columnSize());
+		
+		for (int row = 0; row < mtrx.rowSize(); row++) {
+			for (int column = 0; column < mtrx.columnSize(); column++) {
+				//get a Gaussian random number with mean 0 and standard deviation 1
+				tempMatrix.set(row, column, mtrx.get(row, column));
+			}
+		}
+		
+		return tempMatrix;
 	}
 
 	public static double norm(Matrix mtrx){
@@ -139,7 +169,7 @@ public class MatrixHelper {
 
 		Matrix tempMatrix = new SparseMatrix(mtrx.rowSize(), 1);
 		int cellNumber;
-		int column = columnNum - 1;
+		int column = columnNum;
 		for(int row = 0; row < mtrx.rowSize(); row++){
 			cellNumber = (int)mtrx.get(row, column);
 			tempMatrix.set(row, 0, cellNumber);
@@ -149,13 +179,13 @@ public class MatrixHelper {
 
 	public static Matrix modifyColumn(Matrix originalMtrx, int columnNumber, Matrix mtrx){
 
-		columnNumber -= 1;
+		int colNumber = columnNumber - 1;
 		double cellValue;
 
 		Matrix tempMatrix = originalMtrx;
 		for(int row = 0; row < mtrx.rowSize(); row++){
 			cellValue = mtrx.get(row, 0);
-			tempMatrix.set(row, columnNumber, cellValue);
+			tempMatrix.set(row, colNumber, cellValue);
 		}
 
 		return tempMatrix;
@@ -308,13 +338,13 @@ public class MatrixHelper {
 
 		int index = 0;
 
-		Matrix tempMatrix = new SparseMatrix(indexMatrix.columnSize(), 1);
+		Matrix tempMatrix = new SparseMatrix(indexMatrix.rowSize(), 1);
 		Matrix columnMatrix = MatrixHelper.toSingleColumn(mtrx);
 		int cellValue;
 		double newValue;
 
-		for (int cell = 0; cell < indexMatrix.columnSize(); cell++) {
-			cellValue = (int)indexMatrix.get(0, cell) - 1;
+		for (int cell = 0; cell < indexMatrix.rowSize(); cell++) {
+			cellValue = (int)indexMatrix.get(cell, 0) - 1;
 			newValue = columnMatrix.get(cellValue, 0);
 			tempMatrix.set(index, 0, newValue);
 			index++;
@@ -436,7 +466,7 @@ public class MatrixHelper {
 		return sqRootMatrix;
 
 	}
-	
+
 	//remove all columns after and including the final column parameter
 	public static Matrix removeColumns(Matrix mtrx, int finalColumn){
 
@@ -451,13 +481,13 @@ public class MatrixHelper {
 		return tempMatrix;
 
 	}
-	
+
 	//return a matrix that only contains the last column
 	//of the matrix that is passed in
 	public static Matrix getLastColumn(Matrix mtrx){
-		
+
 		int lastColumn = mtrx.columnSize() - 1;
-		
+
 		Matrix tempMatrix = new SparseMatrix(mtrx.rowSize(), 1);
 		for (int row = 0; row < mtrx.rowSize(); row++) {
 			tempMatrix.set(row, 0, mtrx.get(row, lastColumn));

@@ -272,10 +272,10 @@ public class SignalTesting {
 		test.set(2, 1, 0);
 		test.set(2, 2, 2);
 		
-		Matrix indexMatrix = new SparseMatrix(1,3);
+		Matrix indexMatrix = new SparseMatrix(3,1);
 		indexMatrix.set(0, 0, 2);
-		indexMatrix.set(0, 1, 7);
-		indexMatrix.set(0, 2, 5);
+		indexMatrix.set(1, 0, 7);
+		indexMatrix.set(2, 0, 5);
 		
 		Matrix tempMatrix = MatrixHelper.getIndices(test, indexMatrix);
 		
@@ -331,14 +331,14 @@ public class SignalTesting {
 		test.set(2, 2, 2);
 		
 		Matrix columnMatrix = MatrixHelper.getColumn(test, 2);
-		assertEquals(columnMatrix.get(0,0), 4, DELTA);
-		assertEquals(columnMatrix.get(1,0), 16, DELTA);
-		assertEquals(columnMatrix.get(2,0), 0, DELTA);
+		assertEquals(columnMatrix.get(0,0), 5, DELTA);
+		assertEquals(columnMatrix.get(1,0), 3, DELTA);
+		assertEquals(columnMatrix.get(2,0), 2, DELTA);
 		
 		Matrix columnMatrixTwo = MatrixHelper.getColumn(test, 1);
-		assertEquals(columnMatrixTwo.get(0,0), 1, DELTA);
-		assertEquals(columnMatrixTwo.get(1,0), 9, DELTA);
-		assertEquals(columnMatrixTwo.get(2,0), 8, DELTA);
+		assertEquals(columnMatrixTwo.get(0,0), 4, DELTA);
+		assertEquals(columnMatrixTwo.get(1,0), 16, DELTA);
+		assertEquals(columnMatrixTwo.get(2,0), 0, DELTA);
 	}
 	
 	@Test

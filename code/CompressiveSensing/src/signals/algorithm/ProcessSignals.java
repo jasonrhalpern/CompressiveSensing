@@ -60,6 +60,8 @@ public class ProcessSignals {
 								SignalHelper.getNumIterations());
 		Matrix xHat = finalMatrices.get(0);
 		Matrix trash = finalMatrices.get(1);
+		//MatrixHelper.printMatrix(xHat);
+		//MatrixHelper.printMatrix(trash);
 		
 	}
 }
