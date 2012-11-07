@@ -3,11 +3,8 @@ package matrix;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.mahout.math.DiagonalMatrix;
 import org.apache.mahout.math.Matrix;
-import org.apache.mahout.math.QRDecomposition;
 import org.apache.mahout.math.SparseMatrix;
-import org.apache.mahout.math.Vector;
 
 public class SignalHelper {
 
@@ -66,11 +63,12 @@ public class SignalHelper {
 		Matrix slicedPhiMatrix = null;
 		Matrix slicedPhiTranspose = null;
 		Matrix wCosampMatrix = null;
+		Matrix trashMatrix = null;
 		double res;
 		Matrix tempMatrix = null;
 		Matrix slicedbb2Matrix = null;
-		Matrix slicedXCosampMatrixOne = null;
-		Matrix slicedXCosampMatrixTwo = null;
+		Matrix slicedXCosampMatrixOne = new SparseMatrix(SignalHelper.getSignalLength(), 1);
+		Matrix slicedXCosampMatrixTwo = new SparseMatrix(SignalHelper.getSignalLength(), 1);
 		Matrix bb2Matrix = new SparseMatrix(numColumns, 1);
 		double normOne = 0;
 		double normTwo = 0;
@@ -81,20 +79,22 @@ public class SignalHelper {
 		while(count < iterations){
 			//backprojection
 			intermediateMatrix = phiMatrix.times(sCosampMatrix);
+			
 			rCosampMatrix = measurementMatrix.minus(intermediateMatrix);
+			
 			proxyCosampMatrix = phiMatrix.transpose().times(rCosampMatrix);
 			proxyCosampMatrix = MatrixHelper.getAbsMatrix(proxyCosampMatrix);
 
 			matrixList = MatrixHelper.sortDescending(proxyCosampMatrix);
-			proxyCosampMatrix = matrixList.get(0);
+			trashMatrix = matrixList.get(0);
 			indexMatrix = matrixList.get(1);
 
-			equalityMatrix = MatrixHelper.notEqual(sCosampMatrix, 0);
+			equalityMatrix = MatrixHelper.notEqual(sCosampMatrix, 0.0);
 			indiceMatrix = MatrixHelper.getIndices(indexMatrix, 1, (2*SignalHelper.getSignalSparsity()));
 
 			findMatrix = MatrixHelper.findNonzero(equalityMatrix);
 			unionMatrix = MatrixHelper.union(findMatrix, indiceMatrix);
-
+			
 			slicedPhiMatrix = MatrixHelper.getColumns(phiMatrix, unionMatrix);
 			slicedPhiTranspose = slicedPhiMatrix.transpose();
 
@@ -103,24 +103,21 @@ public class SignalHelper {
 					slicedPhiTranspose.times(measurementMatrix),
 					tolerance, SignalHelper.getMaxIterations(), verbose);
 			wCosampMatrix = cgSolveMatrices.get(0);
+
 			res= cgSolveMatrices.get(1).get(0, 0);
 			iterz = (int)cgSolveMatrices.get(2).get(0, 0);
+			
 
 			bb2Matrix = MatrixHelper.fillWithZeros(bb2Matrix);
 
 			bb2Matrix = MatrixHelper.setCellValues(bb2Matrix, unionMatrix, wCosampMatrix);
-			System.out.println("COUNT ="+ count);
-			System.out.println("BB2  MATRIX");
-			MatrixHelper.printMatrix(bb2Matrix);
-			System.out.println("ROWS = " + bb2Matrix.rowSize());
-			System.out.println("COLUMNS = " + bb2Matrix.columnSize());
 
 			//prune
 			count++;
 			tempMatrix = MatrixHelper.copyMatrix(bb2Matrix);
 			tempMatrix = MatrixHelper.getAbsMatrix(tempMatrix);
 			matrixList = MatrixHelper.sortDescending(tempMatrix);
-			proxyCosampMatrix = matrixList.get(0);
+			trashMatrix = matrixList.get(0);
 			indexMatrix = matrixList.get(1);
 
 			sCosampMatrix = bb2Matrix.times(0);
@@ -128,16 +125,21 @@ public class SignalHelper {
 			indiceMatrix = MatrixHelper.getIndices(indexMatrix, 1, signalSparsity);
 			slicedbb2Matrix = MatrixHelper.getIndices(bb2Matrix, indiceMatrix);
 			sCosampMatrix = MatrixHelper.setCellValues(sCosampMatrix, indiceMatrix, slicedbb2Matrix);
-			xCosampMatrix = MatrixHelper.modifyColumn(xCosampMatrix, count, sCosampMatrix);
-			System.out.println("X COSAMP MATRIX");
-			MatrixHelper.printMatrix(xCosampMatrix);
-			System.out.println("ROWS = " + xCosampMatrix.rowSize());
-			System.out.println("COLUMNS = " + xCosampMatrix.columnSize());
+			
+			if(count < 10)
+				xCosampMatrix = MatrixHelper.modifyColumn(xCosampMatrix, count, sCosampMatrix);
+			
 			if(count < 10){
 				slicedXCosampMatrixOne = MatrixHelper.getColumn(xCosampMatrix, count);
 				slicedXCosampMatrixTwo = MatrixHelper.getColumn(xCosampMatrix, count - 1);
+
 				normOne = MatrixHelper.norm(slicedXCosampMatrixOne.minus(slicedXCosampMatrixTwo));
 				normTwo = MatrixHelper.norm(slicedXCosampMatrixOne);
+				
+				if(count==5){
+					System.out.println("NORM ONE = " + normOne);
+					}
+
 				if(normOne < (.01* normTwo)){
 					break;
 				}
@@ -149,8 +151,8 @@ public class SignalHelper {
 		Matrix xHatMatrix = new SparseMatrix(xCosampMatrix.rowSize(), 1);
 		xHatMatrix = MatrixHelper.getLastColumn(xCosampMatrix);
 
-		finalMatrices.add(xCosampMatrix);
 		finalMatrices.add(xHatMatrix);
+		finalMatrices.add(xCosampMatrix);
 
 		return finalMatrices;
 	}
@@ -185,6 +187,7 @@ public class SignalHelper {
 			qMatrix = firstMatrix.times(dMatrix);
 			alpha= delta/(dMatrix.transpose().times(qMatrix).get(0, 0));
 			xMatrix = xMatrix.plus((dMatrix.times(alpha)));
+	
 			if(((numIters+1)%50) == 0){
 				rMatrix = secondMatrix.minus(firstMatrix.times(xMatrix));
 			}

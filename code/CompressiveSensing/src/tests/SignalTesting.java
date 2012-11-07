@@ -2,6 +2,7 @@ package tests;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -303,7 +304,7 @@ public class SignalTesting {
 		indexMatrix.set(1, 0, 7);
 		indexMatrix.set(2, 0, 5);
 		
-		Matrix newMatrix = MatrixHelper.modifyColumn(test, 3, indexMatrix);
+		Matrix newMatrix = MatrixHelper.modifyColumn(test, 2, indexMatrix);
 		assertEquals(newMatrix.get(0,0), 1, DELTA);
 		assertEquals(newMatrix.get(1,0), 9, DELTA);
 		assertEquals(newMatrix.get(2,0), 8, DELTA);
@@ -339,6 +340,7 @@ public class SignalTesting {
 		assertEquals(columnMatrixTwo.get(0,0), 4, DELTA);
 		assertEquals(columnMatrixTwo.get(1,0), 16, DELTA);
 		assertEquals(columnMatrixTwo.get(2,0), 0, DELTA);
+		
 	}
 	
 	@Test

@@ -1,5 +1,9 @@
 package matrix;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -68,22 +72,22 @@ public class MatrixHelper {
 	//of the integers from 1 to the length of the signal inclusive.
 	public static Matrix randomPermutation(Matrix randomMatrix){
 
-		//there has to only be one row vector
-		if(randomMatrix.rowSize() > 1)
+		//there has to only be one column vector
+		if(randomMatrix.columnSize() > 1)
 			return null;
 
 		//use an array list to build up list of numbers then shuffle it to get a 
 		//random permutation of the list
 		List<Integer> permutationList = new ArrayList<Integer>();
-		for(int index = 0; index < randomMatrix.columnSize(); index++){
+		for(int index = 0; index < randomMatrix.rowSize(); index++){
 			permutationList.add(index + 1);
 		}
 		Collections.shuffle(permutationList); //shuffle
 
 		//fill each cell in vector with a number, which will be random
 		//since the list has already been shuffled.
-		for(int index = 0; index < randomMatrix.columnSize(); index++){
-			randomMatrix.set(0, index, permutationList.get(index));
+		for(int index = 0; index < randomMatrix.rowSize(); index++){
+			randomMatrix.set(index, 0, permutationList.get(index));
 		}
 
 		return randomMatrix;
@@ -139,18 +143,18 @@ public class MatrixHelper {
 
 		return zeroMatrix;
 	}*/
-	
+
 	public static Matrix copyMatrix(Matrix mtrx){
-		
+
 		Matrix tempMatrix = new SparseMatrix(mtrx.rowSize(), mtrx.columnSize());
-		
+
 		for (int row = 0; row < mtrx.rowSize(); row++) {
 			for (int column = 0; column < mtrx.columnSize(); column++) {
 				//get a Gaussian random number with mean 0 and standard deviation 1
 				tempMatrix.set(row, column, mtrx.get(row, column));
 			}
 		}
-		
+
 		return tempMatrix;
 	}
 
@@ -168,10 +172,10 @@ public class MatrixHelper {
 	public static Matrix getColumn(Matrix mtrx, int columnNum){
 
 		Matrix tempMatrix = new SparseMatrix(mtrx.rowSize(), 1);
-		int cellNumber;
+		double cellNumber;
 		int column = columnNum;
 		for(int row = 0; row < mtrx.rowSize(); row++){
-			cellNumber = (int)mtrx.get(row, column);
+			cellNumber = mtrx.get(row, column);
 			tempMatrix.set(row, 0, cellNumber);
 		}
 		return tempMatrix;
@@ -179,7 +183,7 @@ public class MatrixHelper {
 
 	public static Matrix modifyColumn(Matrix originalMtrx, int columnNumber, Matrix mtrx){
 
-		int colNumber = columnNumber - 1;
+		int colNumber = columnNumber;
 		double cellValue;
 
 		Matrix tempMatrix = originalMtrx;
@@ -191,6 +195,41 @@ public class MatrixHelper {
 		return tempMatrix;
 	}
 
+	public static Matrix matrixFromFile(Matrix mtrx, File fileName){
+		BufferedReader br = null;
+		int row = 0;
+
+		try {
+			String currentLine;
+			br = new BufferedReader(new FileReader(fileName));
+			while ((currentLine = br.readLine()) != null) {
+				String[] columnValues = currentLine.split("\t");
+				
+				if(currentLine.contains(" "))
+						System.out.println(currentLine.length());
+				
+				if(columnValues.length == 1){
+					mtrx.set(row, 0, Double.parseDouble(columnValues[0]));
+				}	
+				else{
+					for(int i = 0; i < mtrx.columnSize(); i++){
+						mtrx.set(row, i, Double.parseDouble(columnValues[i]));
+					}
+				}
+				row++;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (br != null)br.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+		return mtrx;
+	}
+
 	//print out the entire matrix
 	public static void printMatrix(Matrix signalMatrix){
 
@@ -200,6 +239,7 @@ public class MatrixHelper {
 
 		//loop through each cell in the matrix and print its value
 		for (int row = 0; row < numRows; row++) {
+			System.out.print("ROW = " + row + " ");
 			for (int column = 0; column < numColumns; column++) {
 				System.out.print(signalMatrix.get(row,column) + " "); // bounds check
 				//sum += matrix.getQuick(row,column); // no bounds check
@@ -290,13 +330,13 @@ public class MatrixHelper {
 
 	//check each cell in the matrix to see if it equals the test value.
 	//1 if not equal, 0 if equal.
-	public static Matrix notEqual(Matrix mtrx, int testValue){
+	public static Matrix notEqual(Matrix mtrx, double testValue){
 
 		Matrix equalityMtrx = new SparseMatrix(mtrx.rowSize(), mtrx.columnSize());
-		int cellValue = 0;
+		double cellValue = 0;
 		for (int row = 0; row < equalityMtrx.rowSize(); row++) {
 			for (int column = 0; column < equalityMtrx.columnSize(); column++) {
-				cellValue = (int) mtrx.get(row, column);
+				cellValue = mtrx.get(row, column);
 				if(cellValue == testValue){
 					equalityMtrx.set(row, column, 0);
 				}
