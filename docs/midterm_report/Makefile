@@ -20,6 +20,7 @@ $(TARGET): $(TEX_SRC) $(BIB_SRC)
 	$(LATEX) $(TEX_SRC)
 	$(BIBTEX) *.aux
 	$(LATEX) $(TEX_SRC)
+	$(LATEX) $(TEX_SRC)
 
 	# dvi to ps
 	$(DVIPS) -Ppdf *.dvi
