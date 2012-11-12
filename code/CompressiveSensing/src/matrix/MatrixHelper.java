@@ -239,7 +239,7 @@ public class MatrixHelper {
 
 		//loop through each cell in the matrix and print its value
 		for (int row = 0; row < numRows; row++) {
-			System.out.print("ROW = " + row + " ");
+			System.out.print("ROW " + (row+1) + " = ");
 			for (int column = 0; column < numColumns; column++) {
 				System.out.print(signalMatrix.get(row,column) + " "); // bounds check
 				//sum += matrix.getQuick(row,column); // no bounds check

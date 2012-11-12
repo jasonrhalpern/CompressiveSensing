@@ -18,12 +18,12 @@ public class ProcessSignals {
 		Matrix signalMatrix = new SparseMatrix(SignalHelper.getSignalLength(), 1);
 		signalMatrix = MatrixHelper.fillWithZeros(signalMatrix);
 		
-		//create row vector that is a random permutation of numbers 1 through signal_length
+		//create column vector that is a random permutation of numbers 1 through signal_length
 		Matrix randomMatrix = new SparseMatrix(SignalHelper.getSignalLength(), 1);
 		randomMatrix = MatrixHelper.randomPermutation(randomMatrix);
 		
 		Matrix modifiedRandomMatrix = new SparseMatrix(SignalHelper.getSignalSparsity(), 1);
-		modifiedRandomMatrix = MatrixHelper.getIndices(randomMatrix, 1, 40);
+		modifiedRandomMatrix = MatrixHelper.getIndices(randomMatrix, 1, SignalHelper.getSignalSparsity());
 		
 		//form a matrix similar to the way Matlab uses randn(x) to create a matrix
 		//based on a normal distribution
@@ -34,13 +34,14 @@ public class ProcessSignals {
 		
 		signalMatrix = MatrixHelper.matrixFromFile(signalMatrix, new File("xmatrix.txt"));
 		
+		long startTime = System.currentTimeMillis();
+		
 		//measurements
 		Matrix gaussDistMatrixTwo = new SparseMatrix(SignalHelper.getNumMeasurements(), 
 													SignalHelper.getSignalLength());
 		gaussDistMatrixTwo = MatrixHelper.randN(gaussDistMatrixTwo);
 		double x = (1 / Math.sqrt(SignalHelper.getNumMeasurements()));
 		Matrix phiMatrix = gaussDistMatrixTwo.times(x);
-		phiMatrix = MatrixHelper.matrixFromFile(phiMatrix, new File("phimatrix.txt"));
 		
 		Matrix measurementMatrix = phiMatrix.times(signalMatrix);
 		
@@ -51,7 +52,14 @@ public class ProcessSignals {
 								SignalHelper.getNumIterations());
 		Matrix xHat = finalMatrices.get(0);
 		Matrix trash = finalMatrices.get(1);
-		//MatrixHelper.printMatrix(xHat);
+		
+		long endTime = System.currentTimeMillis();
+		
+		long duration = endTime - startTime;
+		 
+		System.out.println("RUNNING TIME OF ALGORITHM IS " + duration + " milliseconds");
+
+		MatrixHelper.printMatrix(xHat);
 		//MatrixHelper.printMatrix(trash);
 		
 	}

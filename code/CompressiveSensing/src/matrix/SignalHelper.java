@@ -102,8 +102,8 @@ public class SignalHelper {
 			cgSolveMatrices = cgSolve(slicedPhiTranspose.times(slicedPhiMatrix), 
 					slicedPhiTranspose.times(measurementMatrix),
 					tolerance, SignalHelper.getMaxIterations(), verbose);
+			
 			wCosampMatrix = cgSolveMatrices.get(0);
-
 			res= cgSolveMatrices.get(1).get(0, 0);
 			iterz = (int)cgSolveMatrices.get(2).get(0, 0);
 			
@@ -135,10 +135,6 @@ public class SignalHelper {
 
 				normOne = MatrixHelper.norm(slicedXCosampMatrixOne.minus(slicedXCosampMatrixTwo));
 				normTwo = MatrixHelper.norm(slicedXCosampMatrixOne);
-				
-				if(count==5){
-					System.out.println("NORM ONE = " + normOne);
-					}
 
 				if(normOne < (.01* normTwo)){
 					break;
