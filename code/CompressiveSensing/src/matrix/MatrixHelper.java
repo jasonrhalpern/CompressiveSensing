@@ -14,6 +14,8 @@ import org.apache.mahout.math.Matrix;
 import org.apache.mahout.math.SparseMatrix;
 
 public class MatrixHelper {
+	
+	public static int[] sparsityMatrix;
 
 	//create an identity matrix based on the given dimensions
 	public static Matrix getIdentityMatrix(int numRows, int numColumns){
@@ -168,6 +170,15 @@ public class MatrixHelper {
 		}
 		return Math.sqrt(sum);
 	}
+	
+	public static Matrix fillColumn(Matrix finalMatrix, Matrix currentMatrix, int colNum){
+		
+		for(int row = 0; row < currentMatrix.rowSize(); row++){
+			finalMatrix.set(row, colNum, currentMatrix.get(row,  0));
+		}
+		
+		return finalMatrix;
+	}
 
 	public static Matrix getColumn(Matrix mtrx, int columnNum){
 
@@ -198,6 +209,7 @@ public class MatrixHelper {
 	public static Matrix matrixFromFile(Matrix mtrx, File fileName){
 		BufferedReader br = null;
 		int row = 0;
+		int count = 0;
 
 		try {
 			String currentLine;
@@ -205,15 +217,23 @@ public class MatrixHelper {
 			while ((currentLine = br.readLine()) != null) {
 				String[] columnValues = currentLine.split("\t");
 				
-				if(currentLine.contains(" "))
-						System.out.println(currentLine.length());
+				if(count == 0){
+					sparsityMatrix = new int[columnValues.length];
+				}
+				count++;
 				
 				if(columnValues.length == 1){
 					mtrx.set(row, 0, Double.parseDouble(columnValues[0]));
+					if(mtrx.get(row, 0) != 0){
+						sparsityMatrix[0]++;
+					}
 				}	
 				else{
 					for(int i = 0; i < mtrx.columnSize(); i++){
 						mtrx.set(row, i, Double.parseDouble(columnValues[i]));
+						if(mtrx.get(row, i) != 0){
+							sparsityMatrix[i]++;
+						}
 					}
 				}
 				row++;

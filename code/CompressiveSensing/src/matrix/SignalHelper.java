@@ -17,6 +17,10 @@ public class SignalHelper {
 	public static int getSignalLength(){
 		return SIGNAL_LENGTH;
 	}
+	
+	public static void setSignalLength(int length){
+		SIGNAL_LENGTH = length;
+	}
 
 	public static int getSignalSparsity(){
 		return SIGNAL_SPARSITY;
