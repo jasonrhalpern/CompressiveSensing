@@ -21,6 +21,10 @@ public class SignalHelper {
 	public static void setSignalLength(int length){
 		SIGNAL_LENGTH = length;
 	}
+	
+	public static void setSignalSparsity(int sparsity){
+		SIGNAL_SPARSITY = sparsity;
+	}
 
 	public static int getSignalSparsity(){
 		return SIGNAL_SPARSITY;

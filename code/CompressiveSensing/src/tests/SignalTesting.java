@@ -2,9 +2,10 @@ package tests;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import junit.framework.TestCase;
 
 import matrix.MatrixHelper;
 
@@ -12,13 +13,13 @@ import org.apache.mahout.math.Matrix;
 import org.apache.mahout.math.SparseMatrix;
 import org.junit.Test;
 
-public class SignalTesting {
+public class SignalTesting extends TestCase {
 	
 	private static final double DELTA = 1e-15;
 
 	@Test
 	//test the function that turns an entire matrix into a single column vector
-	public void singleColumnTest(){
+	public void testSingleColumn(){
 		
 		Matrix testOneMatrix = new SparseMatrix(5, 4);
 		testOneMatrix.set(0, 0, 3.2);
@@ -38,7 +39,7 @@ public class SignalTesting {
 	
 	@Test
 	//test the absolute value function
-	public void absValueTest(){
+	public void testAbsValue(){
 		
 		Matrix testMatrix = new SparseMatrix(2, 2);
 		testMatrix.set(0, 0, -1);
@@ -55,7 +56,7 @@ public class SignalTesting {
 	}
 	
 	@Test
-	public void sortDescTest(){
+	public void testSortDesc(){
 		
 		List<Matrix> list = new ArrayList<Matrix>();
 		Matrix test = new SparseMatrix(4,4);
@@ -78,7 +79,7 @@ public class SignalTesting {
 	}
 	
 	@Test
-	public void notEqualTest(){
+	public void testNotEqual(){
 		
 		Matrix test = new SparseMatrix(7,1);
 		test.set(0, 0, 9);
@@ -100,7 +101,7 @@ public class SignalTesting {
 	}
 	
 	@Test
-	public void indexTest(){
+	public void testIndex(){
 		
 		Matrix test = new SparseMatrix(4,4);
 		test.set(0, 0, 9);
@@ -132,7 +133,7 @@ public class SignalTesting {
 	}
 	
 	@Test
-	public void findNonzerosTest(){
+	public void testFindNonzeros(){
 		
 		Matrix test = new SparseMatrix(4,4);
 		test.set(0, 0, 9);
@@ -182,7 +183,7 @@ public class SignalTesting {
 	}
 	
 	@Test
-	public void unionTest(){
+	public void testUnion(){
 		
 		Matrix test = new SparseMatrix(1,4);
 		test.set(0, 0, 9);
@@ -208,7 +209,7 @@ public class SignalTesting {
 	}
 	
 	@Test
-	public void getColumnsTest(){
+	public void testGetColumns(){
 		
 		Matrix test = new SparseMatrix(2,4);
 		test.set(0, 0, 9);
@@ -233,7 +234,7 @@ public class SignalTesting {
 	}
 	
 	@Test
-	public void lengthTest(){
+	public void testLength(){
 		
 		Matrix test = new SparseMatrix(2,4);
 		int lengthOne = MatrixHelper.length(test);
@@ -246,7 +247,7 @@ public class SignalTesting {
 	}
 	
 	@Test 
-	public void squareRootTest(){
+	public void testSquareRoot(){
 		Matrix test = new SparseMatrix(2,2);
 		test.set(0, 0, 1);
 		test.set(0, 1, 4);
@@ -261,7 +262,7 @@ public class SignalTesting {
 	}
 	
 	@Test
-	public void getIndicesTest(){
+	public void testGetIndices(){
 		Matrix test = new SparseMatrix(3,3);
 		test.set(0, 0, 1);
 		test.set(0, 1, 4);
@@ -286,7 +287,7 @@ public class SignalTesting {
 	}
 	
 	@Test 
-	public void modifyColumnTest(){
+	public void testModifyColumn(){
 		
 		Matrix test = new SparseMatrix(3,3);
 		test.set(0, 0, 1);
@@ -318,7 +319,7 @@ public class SignalTesting {
 	}
 	
 	@Test
-	public void getColumnTest(){
+	public void testGetColumn(){
 		
 		Matrix test = new SparseMatrix(3,3);
 		test.set(0, 0, 1);
@@ -344,7 +345,7 @@ public class SignalTesting {
 	}
 	
 	@Test
-	public void normTest(){
+	public void testNorm(){
 		
 		Matrix test = new SparseMatrix(3,3);
 		test.set(0, 0, 1);
@@ -362,7 +363,7 @@ public class SignalTesting {
 	}
 	
 	@Test
-	public void removeColumnsTest(){
+	public void testRemoveColumns(){
 		Matrix test = new SparseMatrix(3,3);
 		test.set(0, 0, 1);
 		test.set(0, 1, 4);
@@ -385,7 +386,7 @@ public class SignalTesting {
 	}
 	
 	@Test
-	public void getLastColumnTest(){
+	public void testGetLastColumn(){
 		Matrix test = new SparseMatrix(3,3);
 		test.set(0, 0, 1);
 		test.set(0, 1, 4);

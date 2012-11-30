@@ -1,8 +1,10 @@
 package matrix;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -67,6 +69,30 @@ public class MatrixHelper {
 		}
 
 		return zeroMatrix;
+	}
+	
+	public static int getColumnLength(File matrixFile){
+		int count = 0;
+		
+		BufferedReader br = null;
+		try {
+			String currentLine;
+			br = new BufferedReader(new FileReader(matrixFile));
+			while ((currentLine = br.readLine()) != null) {
+				String[] columnValues = currentLine.split("\t");
+				return columnValues.length;
+				
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (br != null)br.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+		return count;
 	}
 
 	//does the same thing as MATLAB's randPerm(n) function.
@@ -206,6 +232,7 @@ public class MatrixHelper {
 		return tempMatrix;
 	}
 
+
 	public static Matrix matrixFromFile(Matrix mtrx, File fileName){
 		BufferedReader br = null;
 		int row = 0;
@@ -267,6 +294,35 @@ public class MatrixHelper {
 			System.out.println();
 		}
 		System.out.println();
+	}
+	
+	public static void writeToFile(String fileName, Matrix signalMatrix){
+		
+		try {
+			
+			File file = new File(fileName);
+ 
+			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+			
+			//get the dimensions of the matrix
+			int numRows = signalMatrix.rowSize();
+			int numColumns = signalMatrix.columnSize();
+
+			//loop through each cell in the matrix and print its value
+			for (int row = 0; row < numRows; row++) {
+				for (int column = 0; column < numColumns; column++) {
+					bw.write(signalMatrix.get(row,column) + " "); // bounds check
+					//sum += matrix.getQuick(row,column); // no bounds check
+				}
+				bw.newLine();
+			}
+			bw.newLine();
+			bw.close();
+ 
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	//converts the entire matrix to a single column.

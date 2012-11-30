@@ -12,18 +12,21 @@ import org.apache.mahout.math.SparseMatrix;
 
 public class ProcessSignals {
 
-	public static void main(String[] args){
+	public static Matrix runCosamp(File matrixFile){
 
+		int columnLength = MatrixHelper.getColumnLength(matrixFile);
 		//generate signal to test algorithm
-		Matrix signalMatrix = new SparseMatrix(SignalHelper.getSignalLength(), 10);//HERE
+		Matrix signalMatrix = new SparseMatrix(SignalHelper.getSignalLength(), columnLength);
 		signalMatrix = MatrixHelper.fillWithZeros(signalMatrix);
-		signalMatrix = MatrixHelper.matrixFromFile(signalMatrix, new File("xmatrix.txt"));
+		signalMatrix = MatrixHelper.matrixFromFile(signalMatrix, matrixFile);
 		Matrix finalMatrix = new SparseMatrix(signalMatrix.rowSize(), signalMatrix.columnSize());
 		Matrix slicedMatrix = null;
-		
+
 		SignalHelper.setSignalLength(finalMatrix.rowSize());
 
-		for(int i = 0; i < 10; i++){//HERE
+		for(int i = 0; i < columnLength; i++){
+			
+			SignalHelper.setSignalSparsity(MatrixHelper.sparsityMatrix[i]);
 
 			//create column vector that is a random permutation of numbers 1 through signal_length
 			Matrix randomMatrix = new SparseMatrix(SignalHelper.getSignalLength(), 1);
@@ -65,16 +68,21 @@ public class ProcessSignals {
 			long duration = endTime - startTime;
 
 			System.out.println("RUNNING TIME OF ALGORITHM IS " + duration + " milliseconds");
-			
+
 			finalMatrix = MatrixHelper.fillColumn(finalMatrix, xHat ,i);
 		}
 
 		MatrixHelper.printMatrix(finalMatrix);
 		//MatrixHelper.printMatrix(trash);
-		
+
 		for(int i = 0; i < MatrixHelper.sparsityMatrix.length; i++){
 			System.out.println(MatrixHelper.sparsityMatrix[i]);
 		}
+		
+		return finalMatrix;
+	}
 
+	public static void main(String[] args){
+		runCosamp(new File("xMatrix.txt"));
 	}
 }
