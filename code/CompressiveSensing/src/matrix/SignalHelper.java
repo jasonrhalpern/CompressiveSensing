@@ -7,7 +7,7 @@ import signals.processing.Signal;
 
 public class SignalHelper {
 
-	//implementation of cosamp algorithm
+	//implementation of cosamp algorithm, follows cosamp.m from the Rice Compressive Sensing toolbox
 	public static Matrix cosampAlgo(Signal sparse, Matrix measurementMatrix, Matrix phiMatrix,
 			int signalSparsity, int iterations){
 
@@ -21,8 +21,6 @@ public class SignalHelper {
 		double tolerance = 0.001;
 		Matrix sCosampMatrix = new SparseMatrix(phiMatrix.columnSize(), 1);
 		sCosampMatrix = MatrixHelper.fillWithZeros(sCosampMatrix);
-		Matrix slicedXCosampMatrixOne = new SparseMatrix(sparse.getSignalLength(), 1);
-		Matrix slicedXCosampMatrixTwo = new SparseMatrix(sparse.getSignalLength(), 1);
 		Matrix bb2Matrix = new SparseMatrix(phiMatrix.columnSize(), 1);
 
 		while(count < iterations){
@@ -56,13 +54,8 @@ public class SignalHelper {
 
 			if(count < 10){
 				xCosampMatrix = MatrixHelper.modifyColumn(xCosampMatrix, count, sCosampMatrix);
-				slicedXCosampMatrixOne = MatrixHelper.getColumn(xCosampMatrix, count);
-				slicedXCosampMatrixTwo = MatrixHelper.getColumn(xCosampMatrix, count - 1);
-
-				double normOne = MatrixHelper.norm(slicedXCosampMatrixOne.minus(slicedXCosampMatrixTwo));
-				double normTwo = MatrixHelper.norm(slicedXCosampMatrixOne);
-
-				if(normOne < (.01* normTwo)){
+				
+				if(testBreakpoint(xCosampMatrix, sparse.getSignalLength(), count)){
 					break;
 				}
 			}
@@ -74,6 +67,23 @@ public class SignalHelper {
 		xHatMatrix = MatrixHelper.getLastColumn(xCosampMatrix);
 
 		return xHatMatrix;
+	}
+	
+	public static boolean testBreakpoint(Matrix xCosampMatrix, int signalLength, int count){
+		
+		Matrix slicedXCosampMatrixOne = new SparseMatrix(signalLength, 1);
+		Matrix slicedXCosampMatrixTwo = new SparseMatrix(signalLength, 1);
+		
+		slicedXCosampMatrixOne = MatrixHelper.getColumn(xCosampMatrix, count);
+		slicedXCosampMatrixTwo = MatrixHelper.getColumn(xCosampMatrix, count - 1);
+
+		double normOne = MatrixHelper.norm(slicedXCosampMatrixOne.minus(slicedXCosampMatrixTwo));
+		double normTwo = MatrixHelper.norm(slicedXCosampMatrixOne);
+
+		if(normOne < (.01* normTwo)){
+			return true;
+		}
+		return false;
 	}
 
 	public static Matrix backProjection(Matrix phiMatrix, Matrix sCosampMatrix, 
