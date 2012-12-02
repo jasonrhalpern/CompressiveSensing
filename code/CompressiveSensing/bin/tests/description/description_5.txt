@@ -1,0 +1,1 @@
+column vector with all zeros

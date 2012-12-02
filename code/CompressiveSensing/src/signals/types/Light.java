@@ -7,7 +7,7 @@ import org.apache.mahout.math.Matrix;
 import signals.processing.Decoder;
 import signals.processing.Encoder;
 
-public class Light implements Signal{
+public class Light implements SignalProcessing{
 	
 	private Matrix signalMatrix;
 	

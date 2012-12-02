@@ -16,8 +16,6 @@ import org.apache.mahout.math.Matrix;
 import org.apache.mahout.math.SparseMatrix;
 
 public class MatrixHelper {
-	
-	public static int[] sparsityMatrix;
 
 	//create an identity matrix based on the given dimensions
 	public static Matrix getIdentityMatrix(int numRows, int numColumns){
@@ -230,51 +228,6 @@ public class MatrixHelper {
 		}
 
 		return tempMatrix;
-	}
-
-
-	public static Matrix matrixFromFile(Matrix mtrx, File fileName){
-		BufferedReader br = null;
-		int row = 0;
-		int count = 0;
-
-		try {
-			String currentLine;
-			br = new BufferedReader(new FileReader(fileName));
-			while ((currentLine = br.readLine()) != null) {
-				String[] columnValues = currentLine.split("\t");
-				
-				if(count == 0){
-					sparsityMatrix = new int[columnValues.length];
-				}
-				count++;
-				
-				if(columnValues.length == 1){
-					mtrx.set(row, 0, Double.parseDouble(columnValues[0]));
-					if(mtrx.get(row, 0) != 0){
-						sparsityMatrix[0]++;
-					}
-				}	
-				else{
-					for(int i = 0; i < mtrx.columnSize(); i++){
-						mtrx.set(row, i, Double.parseDouble(columnValues[i]));
-						if(mtrx.get(row, i) != 0){
-							sparsityMatrix[i]++;
-						}
-					}
-				}
-				row++;
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (br != null)br.close();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-		}
-		return mtrx;
 	}
 
 	//print out the entire matrix
