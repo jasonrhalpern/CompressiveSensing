@@ -23,8 +23,8 @@ public class Signal {
 
 	public Signal(File matrixFile){
 
-		int columnLength = MatrixHelper.getColumnLength(matrixFile);
-		signalMatrix = new SparseMatrix(getSignalLength(), columnLength);
+		int rowLength = MatrixHelper.getRowLength(matrixFile);
+		signalMatrix = new SparseMatrix(getSignalLength(), rowLength);
 		signalMatrix = MatrixHelper.fillWithZeros(signalMatrix);
 		this.matrixFromFile(matrixFile);
 	}
@@ -83,8 +83,10 @@ public class Signal {
 
 		this.setSignalLength(finalMatrix.rowSize());
 
+		//reconstruct one column vector at a time
 		for(int i = 0; i < signalMatrix.columnSize(); i++){
 
+			//set the sparsity for this column in the matrix
 			this.setSignalSparsity(this.getSparsityMatrix(i));
 
 			//create column vector that is a random permutation of numbers 1 through signal_length
@@ -97,10 +99,11 @@ public class Signal {
 			Matrix phiMatrix = this.getMeasurements();
 			Matrix measurementMatrix = phiMatrix.times(slicedMatrix);
 
-			//reconstruct
+			//reconstruct using the cosamp algorithm
 			Matrix xHat = SignalHelper.cosampAlgo(this, measurementMatrix, phiMatrix, 
 					this.getSignalSparsity(), this.getNumIterations());
 
+			//set column in the final matrix to reflect reconstructed vector
 			finalMatrix = MatrixHelper.fillColumn(finalMatrix, xHat ,i);
 		}
 
@@ -117,11 +120,13 @@ public class Signal {
 			while ((currentLine = br.readLine()) != null) {
 				String[] columnValues = currentLine.split("\t");
 
+				//initialize sparsity matrix on the first turn
 				if(count == 0){
 					sparsityMatrix = new int[columnValues.length];
 				}
 				count++;
 
+				//build the signal matrix from the values in the file
 				if(columnValues.length == 1){
 					signalMatrix.set(row, 0, Double.parseDouble(columnValues[0]));
 					if(signalMatrix.get(row, 0) != 0){

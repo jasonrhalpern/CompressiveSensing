@@ -13,6 +13,7 @@ import org.apache.mahout.math.Matrix;
 import org.apache.mahout.math.SparseMatrix;
 import org.junit.Test;
 
+//Tests for all the functions that were written to simulate Matlab matrix manipulation
 public class SignalTesting extends TestCase {
 	
 	private static final double DELTA = 1e-15;

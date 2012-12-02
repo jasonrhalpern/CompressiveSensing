@@ -69,7 +69,9 @@ public class MatrixHelper {
 		return zeroMatrix;
 	}
 	
-	public static int getColumnLength(File matrixFile){
+	//finds the number of columns in a row,
+	//this is important to create matrices with the correct dimensions
+	public static int getRowLength(File matrixFile){
 		int count = 0;
 		
 		BufferedReader br = null;
@@ -170,13 +172,13 @@ public class MatrixHelper {
 		return zeroMatrix;
 	}*/
 
+	//create a copy of a matrix
 	public static Matrix copyMatrix(Matrix mtrx){
 
 		Matrix tempMatrix = new SparseMatrix(mtrx.rowSize(), mtrx.columnSize());
 
 		for (int row = 0; row < mtrx.rowSize(); row++) {
 			for (int column = 0; column < mtrx.columnSize(); column++) {
-				//get a Gaussian random number with mean 0 and standard deviation 1
 				tempMatrix.set(row, column, mtrx.get(row, column));
 			}
 		}
@@ -184,6 +186,9 @@ public class MatrixHelper {
 		return tempMatrix;
 	}
 
+	//Similar to Matlab's norm() function.
+	//It squares each value in the matrix, adds those values together, then
+	//takes the square root of that sum.
 	public static double norm(Matrix mtrx){
 
 		double sum = 0;
@@ -195,6 +200,8 @@ public class MatrixHelper {
 		return Math.sqrt(sum);
 	}
 	
+	//Takes the values from the first column in currentMatrix and sets the values
+	//in the given column of the finalMatrix to those values.
 	public static Matrix fillColumn(Matrix finalMatrix, Matrix currentMatrix, int colNum){
 		
 		for(int row = 0; row < currentMatrix.rowSize(); row++){
@@ -204,6 +211,7 @@ public class MatrixHelper {
 		return finalMatrix;
 	}
 
+	//Get the specific column from the given matrix.
 	public static Matrix getColumn(Matrix mtrx, int columnNum){
 
 		Matrix tempMatrix = new SparseMatrix(mtrx.rowSize(), 1);
@@ -242,13 +250,13 @@ public class MatrixHelper {
 			System.out.print("ROW " + (row+1) + " = ");
 			for (int column = 0; column < numColumns; column++) {
 				System.out.print(signalMatrix.get(row,column) + " "); // bounds check
-				//sum += matrix.getQuick(row,column); // no bounds check
 			}
 			System.out.println();
 		}
 		System.out.println();
 	}
 	
+	//Write a given matrix to a file
 	public static void writeToFile(String fileName, Matrix signalMatrix){
 		
 		try {
@@ -262,11 +270,10 @@ public class MatrixHelper {
 			int numRows = signalMatrix.rowSize();
 			int numColumns = signalMatrix.columnSize();
 
-			//loop through each cell in the matrix and print its value
+			//loop through each cell in the matrix and write its value
 			for (int row = 0; row < numRows; row++) {
 				for (int column = 0; column < numColumns; column++) {
-					bw.write(signalMatrix.get(row,column) + " "); // bounds check
-					//sum += matrix.getQuick(row,column); // no bounds check
+					bw.write(signalMatrix.get(row,column) + " "); 
 				}
 				bw.newLine();
 			}
@@ -307,7 +314,6 @@ public class MatrixHelper {
 		double cellValue = 0;
 		for (int row = 0; row < mtrx.rowSize(); row++) {
 			for (int column = 0; column < mtrx.columnSize(); column++) {
-				//get a Gaussian random number with mean 0 and standard deviation 1
 				cellValue = mtrx.get(row, column);
 				cellValue = Math.abs(cellValue);
 				mtrx.set(row, column, cellValue);
@@ -377,6 +383,7 @@ public class MatrixHelper {
 		return equalityMtrx;
 	}
 
+	//Grab all values in the given indices from the matrix.
 	public static Matrix getIndices(Matrix mtrx, int startIndex, int endIndex){
 
 		int count = 1;
@@ -403,6 +410,8 @@ public class MatrixHelper {
 		return indexMatrix;
 	}
 
+	//Loop through the index matrix to get a specific index, then grab
+	//the value at that index from the matrix.
 	public static Matrix getIndices(Matrix mtrx, Matrix indexMatrix){
 
 		int index = 0;
@@ -513,6 +522,7 @@ public class MatrixHelper {
 		return tempMatrix;
 	}
 
+	//find the length of a matrix. This is the max of either the row length or column length.
 	public static int length(Matrix mtrx){
 
 		if(mtrx.rowSize() > mtrx.columnSize()){

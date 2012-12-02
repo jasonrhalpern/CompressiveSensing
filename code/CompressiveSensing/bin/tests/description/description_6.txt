@@ -1,1 +1,1 @@
-one cell of zero
+This tests the algorithm on a single value of zero.

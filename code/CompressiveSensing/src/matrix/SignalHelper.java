@@ -34,7 +34,7 @@ public class SignalHelper {
 			Matrix slicedPhiMatrix = MatrixHelper.getColumns(phiMatrix, unionMatrix);
 			Matrix slicedPhiTranspose = slicedPhiMatrix.transpose();
 
-			//estimate
+			//estimate using the cgSolve function
 			Matrix wCosampMatrix = cgSolve(slicedPhiTranspose.times(slicedPhiMatrix), 
 					slicedPhiTranspose.times(measurementMatrix),
 					tolerance, sparse.getMaxIterations(), verbose);
@@ -94,6 +94,7 @@ public class SignalHelper {
 		return MatrixHelper.union(findMatrix, indiceMatrix);
 	}
 
+	//corresponds to the function in cgsolve.m
 	public static Matrix cgSolve(Matrix firstMatrix, Matrix secondMatrix,
 			double tolerance, int maxIterations, int verbose){
 
@@ -120,7 +121,7 @@ public class SignalHelper {
 			double alpha= delta/(dMatrix.transpose().times(qMatrix).get(0, 0));
 			xMatrix = xMatrix.plus((dMatrix.times(alpha)));
 
-			if(((numIters+1)%50) == 0){
+			if(((numIters+1) % 50) == 0){
 				rMatrix = secondMatrix.minus(firstMatrix.times(xMatrix));
 			}
 			else{

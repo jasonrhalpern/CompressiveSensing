@@ -1,1 +1,1 @@
-column vector with all zeros
+This tests the algorithm on a single column vector with all zeros.

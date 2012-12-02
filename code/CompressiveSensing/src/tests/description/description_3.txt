@@ -1,1 +1,2 @@
-another column vector
+This tests the Cosamp algorithm on a single sparse column vector. 
+It is the same structure as the test in description_1.txt.

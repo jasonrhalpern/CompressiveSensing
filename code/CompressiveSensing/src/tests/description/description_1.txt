@@ -1,1 +1,1 @@
-regular column vector
+This tests the Cosamp algorithm on a single sparse column vector.

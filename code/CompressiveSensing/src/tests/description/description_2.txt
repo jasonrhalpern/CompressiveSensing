@@ -1,1 +1,1 @@
-full matrix, each column has a slightly different sparsity
+This tests the Cosamp algorithm on a full matrix, as opposed to just a column vector.

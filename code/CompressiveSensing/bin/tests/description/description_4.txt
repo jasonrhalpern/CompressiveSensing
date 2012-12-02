@@ -1,1 +1,2 @@
-another full matrix
+This tests the Cosamp algorithm on a full matrix, as opposed to just a column vector.
+It is the same structure as the test in description_2.txt.
