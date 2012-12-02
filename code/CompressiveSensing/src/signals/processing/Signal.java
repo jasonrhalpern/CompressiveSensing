@@ -29,7 +29,7 @@ public class Signal {
 		this.matrixFromFile(matrixFile);
 	}
 
-	public Matrix getMatrix(){
+	public Matrix getSignalMatrix(){
 		return signalMatrix;
 	}
 
@@ -78,7 +78,7 @@ public class Signal {
 
 	public Matrix runCosamp(){
 
-		Matrix signalMatrix = this.getMatrix();
+		Matrix signalMatrix = this.getSignalMatrix();
 		Matrix finalMatrix = new SparseMatrix(signalMatrix.rowSize(), signalMatrix.columnSize());
 
 		this.setSignalLength(finalMatrix.rowSize());

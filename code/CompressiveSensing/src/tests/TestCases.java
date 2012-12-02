@@ -36,7 +36,7 @@ public class TestCases extends TestCase{
 			String tempFile = "src/tests/temp/temp_" + number + ".txt";
 
 			Signal sparseTwo = new Signal(new File(resultsFile));
-			Matrix two = sparseTwo.getMatrix();
+			Matrix two = sparseTwo.getSignalMatrix();
 
 			int numRows = two.rowSize();
 			int numCols = two.columnSize();
