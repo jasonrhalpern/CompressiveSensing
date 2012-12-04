@@ -11,15 +11,14 @@ import matrix.SignalHelper;
 import org.apache.mahout.math.Matrix;
 import org.apache.mahout.math.SparseMatrix;
 
+import signals.algorithm.ProcessSignals;
+
 public class Signal {
 
 	protected Matrix signalMatrix;
-	protected int[] sparsityMatrix;
+	protected int[] sparsityMatrix; //holds the sparsity of each column vector
 	private int SIGNAL_LENGTH = 1024;
-	private int SIGNAL_SPARSITY = 40;
-	private int NUM_MEASUREMENTS = 240;
-	private int NUM_ITERATIONS = 10;
-	private int MAX_ITERATIONS = 1000;
+	private final int NUM_MEASUREMENTS = 240;
 
 	public Signal(File matrixFile){
 
@@ -41,24 +40,8 @@ public class Signal {
 		SIGNAL_LENGTH = length;
 	}
 
-	public void setSignalSparsity(int sparsity){
-		SIGNAL_SPARSITY = sparsity;
-	}
-
-	public int getSignalSparsity(){
-		return SIGNAL_SPARSITY;
-	}
-
 	public int getNumMeasurements(){
 		return NUM_MEASUREMENTS;
-	}
-
-	public int getNumIterations(){
-		return NUM_ITERATIONS;
-	}
-
-	public int getMaxIterations(){
-		return MAX_ITERATIONS;
 	}
 
 	public int getSparsityMatrix(int arrayNum){
@@ -76,7 +59,7 @@ public class Signal {
 		return gaussDistMatrix.times(x);
 	}
 
-	public Matrix runCosamp(){
+	public Matrix runCosamp(int numIterations){
 
 		Matrix signalMatrix = this.getSignalMatrix();
 		Matrix finalMatrix = new SparseMatrix(signalMatrix.rowSize(), signalMatrix.columnSize());
@@ -85,9 +68,6 @@ public class Signal {
 
 		//reconstruct one column vector at a time
 		for(int i = 0; i < signalMatrix.columnSize(); i++){
-
-			//set the sparsity for this column in the matrix
-			this.setSignalSparsity(this.getSparsityMatrix(i));
 
 			//create column vector that is a random permutation of numbers 1 through signal_length
 			Matrix randomMatrix = new SparseMatrix(this.getSignalLength(), 1);
@@ -101,7 +81,7 @@ public class Signal {
 
 			//reconstruct using the cosamp algorithm
 			Matrix xHat = SignalHelper.cosampAlgo(this, measurementMatrix, phiMatrix, 
-					this.getSignalSparsity(), this.getNumIterations());
+					this.getSparsityMatrix(i), numIterations);
 
 			//set column in the final matrix to reflect reconstructed vector
 			finalMatrix = MatrixHelper.fillColumn(finalMatrix, xHat ,i);

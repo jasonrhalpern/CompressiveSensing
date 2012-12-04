@@ -3,6 +3,7 @@ package matrix;
 import org.apache.mahout.math.Matrix;
 import org.apache.mahout.math.SparseMatrix;
 
+import signals.algorithm.ProcessSignals;
 import signals.processing.Signal;
 
 public class SignalHelper {
@@ -27,7 +28,7 @@ public class SignalHelper {
 
 			//backprojection
 			Matrix unionMatrix = backProjection(phiMatrix, sCosampMatrix, 
-					measurementMatrix, sparse.getSignalSparsity());
+					measurementMatrix, signalSparsity);
 
 			Matrix slicedPhiMatrix = MatrixHelper.getColumns(phiMatrix, unionMatrix);
 			Matrix slicedPhiTranspose = slicedPhiMatrix.transpose();
@@ -35,7 +36,7 @@ public class SignalHelper {
 			//estimate using the cgSolve function
 			Matrix wCosampMatrix = cgSolve(slicedPhiTranspose.times(slicedPhiMatrix), 
 					slicedPhiTranspose.times(measurementMatrix),
-					tolerance, sparse.getMaxIterations(), verbose);
+					tolerance, ProcessSignals.getMaxIterations(), verbose);
 
 			bb2Matrix = MatrixHelper.fillWithZeros(bb2Matrix);
 			bb2Matrix = MatrixHelper.setCellValues(bb2Matrix, unionMatrix, wCosampMatrix);

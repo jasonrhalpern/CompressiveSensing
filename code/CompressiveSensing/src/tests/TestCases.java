@@ -28,7 +28,7 @@ public class TestCases extends TestCase{
 		//compare with the results to make sure it is correct
 		for(File f : listOfFiles){
 			Signal sparse = new Signal(f);
-			Matrix one = sparse.runCosamp();
+			Matrix one = sparse.runCosamp(ProcessSignals.getNumIterations());
 			String[] s = f.toString().split("_");
 			char number = s[1].charAt(0);
 			System.out.println(number);
