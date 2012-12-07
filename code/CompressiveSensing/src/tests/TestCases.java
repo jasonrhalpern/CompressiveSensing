@@ -1,7 +1,5 @@
 package tests;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 
 import junit.framework.TestCase;
@@ -25,7 +23,7 @@ public class TestCases extends TestCase{
 		File folder = new File("src/tests/input");
 		File[] listOfFiles = folder.listFiles();
 		//run the matrix or vector from each file through the algorithm and 
-		//compare with the results to make sure it is correct
+		//compare with the results files to make sure it is correct
 		for(File f : listOfFiles){
 			Signal sparse = new Signal(f);
 			Matrix one = sparse.runCosamp(ProcessSignals.getNumIterations());
@@ -44,10 +42,14 @@ public class TestCases extends TestCase{
 			//write results to file
 			MatrixHelper.writeToFile(tempFile, one);
 
+			//acceptable deviation during signal reconstruction from the original value,
+			//this is because reconstruction will not be exact
+			double ERROR_RATE = 0.065;
+			
 			for(int row = 0; row < numRows; row++){
 				for(int column = 0; column < numCols; column++){
-					assertTrue(((one.get(row,column)-0.1) <= two.get(row, column)) && 
-							(two.get(row, column)<= (one.get(row,column) + 0.1)));
+					assertTrue(((one.get(row,column) - ERROR_RATE) <= two.get(row, column)) && 
+							(two.get(row, column) <= (one.get(row,column) + ERROR_RATE)));
 				}
 			}
 		}	

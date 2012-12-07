@@ -11,21 +11,19 @@ import matrix.SignalHelper;
 import org.apache.mahout.math.Matrix;
 import org.apache.mahout.math.SparseMatrix;
 
-import signals.algorithm.ProcessSignals;
-
 public class Signal {
 
 	protected Matrix signalMatrix;
 	protected int[] sparsityMatrix; //holds the sparsity of each column vector
-	private int SIGNAL_LENGTH = 1024;
+	private int SIGNAL_LENGTH = 1024; //number of rows in the signal
 	private final int NUM_MEASUREMENTS = 240;
 
 	public Signal(File matrixFile){
 
-		int rowLength = MatrixHelper.getRowLength(matrixFile);
-		signalMatrix = new SparseMatrix(getSignalLength(), rowLength);
+		int numColumns = getNumColumns(matrixFile);
+		signalMatrix = new SparseMatrix(getSignalLength(), numColumns);
 		signalMatrix = MatrixHelper.fillWithZeros(signalMatrix);
-		this.matrixFromFile(matrixFile);
+		matrixFromFile(matrixFile);
 	}
 
 	public Matrix getSignalMatrix(){
@@ -47,7 +45,7 @@ public class Signal {
 	public int getSparsityMatrix(int arrayNum){
 		return sparsityMatrix[arrayNum];
 	}
-	
+
 	public Matrix getMeasurements(){
 
 		Matrix gaussDistMatrix = new SparseMatrix(getNumMeasurements(), getSignalLength());
@@ -61,10 +59,10 @@ public class Signal {
 
 	public Matrix runCosamp(int numIterations){
 
-		Matrix signalMatrix = this.getSignalMatrix();
+		Matrix signalMatrix = getSignalMatrix();
 		Matrix finalMatrix = new SparseMatrix(signalMatrix.rowSize(), signalMatrix.columnSize());
 
-		this.setSignalLength(finalMatrix.rowSize());
+		setSignalLength(finalMatrix.rowSize());
 
 		//reconstruct one column vector at a time
 		for(int i = 0; i < signalMatrix.columnSize(); i++){
@@ -76,12 +74,12 @@ public class Signal {
 			Matrix slicedMatrix = MatrixHelper.getColumn(signalMatrix, i);
 
 			//measurements
-			Matrix phiMatrix = this.getMeasurements();
+			Matrix phiMatrix = getMeasurements();
 			Matrix measurementMatrix = phiMatrix.times(slicedMatrix);
 
 			//reconstruct using the cosamp algorithm
 			Matrix xHat = SignalHelper.cosampAlgo(this, measurementMatrix, phiMatrix, 
-					this.getSparsityMatrix(i), numIterations);
+					getSparsityMatrix(i), numIterations);
 
 			//set column in the final matrix to reflect reconstructed vector
 			finalMatrix = MatrixHelper.fillColumn(finalMatrix, xHat ,i);
@@ -91,8 +89,7 @@ public class Signal {
 	}
 
 	public void matrixFromFile(File fileName){
-		int row = 0;
-		int count = 0;
+		int rowNumber = 0;
 
 		try {
 			String currentLine;
@@ -101,32 +98,58 @@ public class Signal {
 				String[] columnValues = currentLine.split("\t");
 
 				//initialize sparsity matrix on the first turn
-				if(count == 0){
+				if(rowNumber == 0){
 					sparsityMatrix = new int[columnValues.length];
 				}
-				count++;
 
 				//build the signal matrix from the values in the file
 				if(columnValues.length == 1){
-					signalMatrix.set(row, 0, Double.parseDouble(columnValues[0]));
-					if(signalMatrix.get(row, 0) != 0){
+					signalMatrix.set(rowNumber, 0, Double.parseDouble(columnValues[0]));
+					if(signalMatrix.get(rowNumber, 0) != 0){
 						sparsityMatrix[0]++;
 					}
 				}	
 				else{
 					for(int i = 0; i < signalMatrix.columnSize(); i++){
-						signalMatrix.set(row, i, Double.parseDouble(columnValues[i]));
-						if(signalMatrix.get(row, i) != 0){
+						signalMatrix.set(rowNumber, i, Double.parseDouble(columnValues[i]));
+						if(signalMatrix.get(rowNumber, i) != 0){
 							sparsityMatrix[i]++;
 						}
 					}
 				}
-				row++;
+				rowNumber++;
 			}
+			setSignalLength(rowNumber);
 			br.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
+	//finds the number of columns in a row,
+	//this is important to create matrices with the correct dimensions
+	public static int getNumColumns(File matrixFile){
+		int count = 0;
+
+		BufferedReader br = null;
+		try {
+			String currentLine;
+			br = new BufferedReader(new FileReader(matrixFile));
+			while ((currentLine = br.readLine()) != null) {
+				String[] columnValues = currentLine.split("\t");
+				
+				return columnValues.length;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (br != null)br.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+		return count;
+	}
+
 }

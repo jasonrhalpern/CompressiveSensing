@@ -1,9 +1,7 @@
 package matrix;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -67,32 +65,6 @@ public class MatrixHelper {
 		}
 
 		return zeroMatrix;
-	}
-	
-	//finds the number of columns in a row,
-	//this is important to create matrices with the correct dimensions
-	public static int getRowLength(File matrixFile){
-		int count = 0;
-		
-		BufferedReader br = null;
-		try {
-			String currentLine;
-			br = new BufferedReader(new FileReader(matrixFile));
-			while ((currentLine = br.readLine()) != null) {
-				String[] columnValues = currentLine.split("\t");
-				return columnValues.length;
-				
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (br != null)br.close();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-		}
-		return count;
 	}
 
 	//does the same thing as MATLAB's randPerm(n) function.
