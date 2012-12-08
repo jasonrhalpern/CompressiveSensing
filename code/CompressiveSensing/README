@@ -41,3 +41,9 @@ Tests Package: The tests folder has all of the tests written for this project
 - TestCases.java runs all the test cases for the cosamp algorithm. It runs through all the matrices
   represented by the files in the tests.input folder and then runs these matrices through the cosamp
   algorithm and compares the resulting matrix to the files in the tests.output folder.
+  
+Running the Program
+- Run the ProcessSignals.java file
+
+Running the Tests (unit tests and test cases)
+- Run the RunTests.java file to kick off all tests, or run the individual testing files.
