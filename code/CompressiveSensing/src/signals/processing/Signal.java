@@ -42,8 +42,8 @@ public class Signal {
 		return NUM_MEASUREMENTS;
 	}
 
-	public int getSparsityMatrix(int arrayNum){
-		return sparsityMatrix[arrayNum];
+	public int getSparsityMatrix(int columnNum){
+		return sparsityMatrix[columnNum];
 	}
 
 	public Matrix getMeasurements(){
@@ -88,6 +88,7 @@ public class Signal {
 		return finalMatrix;
 	}
 
+	//create a matrix from the signal represented in the file
 	public void matrixFromFile(File fileName){
 		int rowNumber = 0;
 
@@ -119,7 +120,7 @@ public class Signal {
 				}
 				rowNumber++;
 			}
-			setSignalLength(rowNumber);
+			setSignalLength(rowNumber); //set the signal length for this matrix
 			br.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -137,18 +138,13 @@ public class Signal {
 			br = new BufferedReader(new FileReader(matrixFile));
 			while ((currentLine = br.readLine()) != null) {
 				String[] columnValues = currentLine.split("\t");
-				
+
 				return columnValues.length;
 			}
+			br.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				if (br != null)br.close();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-		}
+		} 
 		return count;
 	}
 

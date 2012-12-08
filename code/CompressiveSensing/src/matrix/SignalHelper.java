@@ -17,6 +17,7 @@ public class SignalHelper {
 		Matrix xCosampMatrix = new SparseMatrix(phiMatrix.columnSize(), iterations);
 		xCosampMatrix = MatrixHelper.fillWithZeros(xCosampMatrix);
 
+		//some initialization
 		int count = 0;
 		int verbose = 0;
 		double tolerance = 0.001;
@@ -41,7 +42,8 @@ public class SignalHelper {
 			bb2Matrix = MatrixHelper.fillWithZeros(bb2Matrix);
 			bb2Matrix = MatrixHelper.setCellValues(bb2Matrix, unionMatrix, wCosampMatrix);
 
-			//prune
+			//prune 
+			//corresponds to Matlab code at line 52 in cosamp.m
 			count++;
 			Matrix tempMatrix = MatrixHelper.copyMatrix(bb2Matrix);
 			tempMatrix = MatrixHelper.getAbsMatrix(tempMatrix);
@@ -53,7 +55,9 @@ public class SignalHelper {
 			Matrix slicedbb2Matrix = MatrixHelper.getIndices(bb2Matrix, indiceMatrix);
 			sCosampMatrix = MatrixHelper.setCellValues(sCosampMatrix, indiceMatrix, slicedbb2Matrix);
 
+			//corresponds to Matlab code from lines 56-61 in cosamp.m
 			if(count < 10){
+				//current signal estimate
 				xCosampMatrix = MatrixHelper.modifyColumn(xCosampMatrix, count, sCosampMatrix);
 				
 				if(testBreakpoint(xCosampMatrix, sparse.getSignalLength(), count)){
@@ -87,6 +91,7 @@ public class SignalHelper {
 		return false;
 	}
 
+	//The Matlab code for this can be found in cosamp.m, starting at line 38
 	public static Matrix backProjection(Matrix phiMatrix, Matrix sCosampMatrix, 
 			Matrix measurementMatrix, int sparsity){
 
@@ -105,7 +110,7 @@ public class SignalHelper {
 		return MatrixHelper.union(findMatrix, indiceMatrix);
 	}
 
-	//corresponds to the function in cgsolve.m
+	//corresponds to the function in cgsolve.m, step-by-step
 	public static Matrix cgSolve(Matrix firstMatrix, Matrix secondMatrix,
 			double tolerance, int maxIterations, int verbose){
 

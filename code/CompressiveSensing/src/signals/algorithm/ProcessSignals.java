@@ -19,6 +19,7 @@ public class ProcessSignals {
 
 	public static void main(String[] args){
 		
+		//run the cosamp algorithm on the signal represented in the file
 		Signal sparseSignal = new Signal(new File("xMatrix.txt"));
 		sparseSignal.runCosamp(NUM_ITERATIONS);
 	}
