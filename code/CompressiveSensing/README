@@ -1,0 +1,43 @@
+Jason Halpern
+Written: December 7, 2012
+
+Implementation of the Cosamp Algorithm
+Research Paper: http://arxiv.org/pdf/0803.2392.pdf
+Code adapted from the cosamp_example from Rice's Computer Science Website 
+http://dsp.rice.edu/software/model-based-compressive-sensing-toolbox-v11
+(check the Sparsity folder in the files under the toolbox)
+
+
+Matrix package
+- MatrixHelper.java has all functions that were written to do matrix manipulation, many of
+  which are written to simulate Matlab functions (i.e. randN(), randPerm()).
+- SignalHelper.java holds the functions for the cosamp algorithm
+
+Signals.Algorithm Package
+- The main function for this program is in ProcessSignals.java, which also includes information 
+  on the number of iterations for the algorithm
+
+Signals.Processing package
+- The Signal class holds the important information for the signal matrix, including
+  the entire matrix representing the signal, the sparsity of the signal, the length
+  of the signal and the number of measurements taken for the algorithm. There are also
+  functions to create a Signal object from a file. 
+- ImageHelper.java includes functions that we used for the Discrete Wavelength Transform,
+  but they aren't actually used anywhere at this point since we backed out the discrete
+  wavelength transform part of the program since we weren't able to implement it.
+- Encode.java and Decode.java were put here at the very beginning of the implementation and
+  some of the Signal Types implement make use of these features, but they are currently
+  not used in the program.
+
+Signals.Types package
+- We did not end up using the SignalProcessing interface in this package and didn't use
+  the types we sketched out (Image, Light, Sound), but they could be useful in the future.
+
+Tests Package: The tests folder has all of the tests written for this project
+- RunTests.java kicks off all the tests.
+- SignalTesting.java has all of the tests that were written to test the matrix manipulation
+  functions in MatrixHelper.java. Many of these functions were written to carry out the same
+  functionality as Matlab functions.
+- TestCases.java runs all the test cases for the cosamp algorithm. It runs through all the matrices
+  represented by the files in the tests.input folder and then runs these matrices through the cosamp
+  algorithm and compares the resulting matrix to the files in the tests.output folder.
