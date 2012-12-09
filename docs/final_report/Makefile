@@ -8,7 +8,6 @@ PS2PDF  = ps2pdf
 BASE	= main
 TEX_SRC = $(BASE).tex
 BIB_SRC = *.bib
-FIG_SRC = figure/*.eps
 
 TARGET = final_report.pdf
 
@@ -16,11 +15,10 @@ TARGET = final_report.pdf
 all: $(TARGET)
 
 # build
-$(TARGET): $(TEX_SRC) $(BIB_SRC) $(FIG_SRC)
-#$(TARGET): $(TEX_SRC) $(BIB_SRC)
+$(TARGET): $(TEX_SRC) $(BIB_SRC)
 	# standard boilerplate (latex; bibtex; latex; latex)
 	$(LATEX) $(TEX_SRC)
-	$(BIBTEX) $(BASE).aux
+	$(BIBTEX) *.aux
 	$(LATEX) $(TEX_SRC)
 	$(LATEX) $(TEX_SRC)
 
