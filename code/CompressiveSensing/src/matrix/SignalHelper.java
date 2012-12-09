@@ -1,3 +1,5 @@
+/** \file
+*/
 package matrix;
 
 import org.apache.mahout.math.Matrix;

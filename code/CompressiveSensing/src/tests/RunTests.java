@@ -1,3 +1,5 @@
+/** \file
+*/
 package tests;
 
 import junit.framework.TestSuite;
@@ -7,7 +9,9 @@ public class RunTests {
 
 	
 	public static void main(String[] args){
-		//Run all of our tests
+		/**
+		Run all of our tests
+		*/
 		TestSuite suite = new TestSuite();
 		suite.addTestSuite(SignalTesting.class);
 		suite.addTestSuite(TestCases.class);

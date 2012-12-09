@@ -1,3 +1,5 @@
+/** \file
+*/
 package signals.types;
 
 import matrix.MatrixHelper;

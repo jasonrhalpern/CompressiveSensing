@@ -1,3 +1,5 @@
+/** \file
+*/
 package tests;
 
 import java.util.ArrayList;
@@ -11,13 +13,17 @@ import org.apache.mahout.math.Matrix;
 import org.apache.mahout.math.SparseMatrix;
 import org.junit.Test;
 
-//Tests for all the functions that were written to simulate Matlab matrix manipulation
+/**
+Tests for all the functions that were written to simulate Matlab matrix manipulation
+*/
 public class SignalTesting extends TestCase {
 	
 	private static final double DELTA = 1e-15;
 
 	@Test
-	//test the function that turns an entire matrix into a single column vector
+	/**
+	test the function that turns an entire matrix into a single column vector
+	*/
 	public void testSingleColumn(){
 		
 		Matrix testOneMatrix = new SparseMatrix(5, 4);
@@ -37,7 +43,9 @@ public class SignalTesting extends TestCase {
 	}
 	
 	@Test
-	//test the absolute value function
+	/**
+	test the absolute value function
+	*/
 	public void testAbsValue(){
 		
 		Matrix testMatrix = new SparseMatrix(2, 2);

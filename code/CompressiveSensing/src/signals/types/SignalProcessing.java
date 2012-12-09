@@ -1,3 +1,5 @@
+/** \file
+*/
 package signals.types;
 
 import org.apache.mahout.math.Matrix;
