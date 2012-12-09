@@ -1,3 +1,5 @@
+/** \file
+*/
 package signals.processing;
 
 import java.io.BufferedReader;
@@ -14,8 +16,14 @@ import org.apache.mahout.math.SparseMatrix;
 public class Signal {
 
 	protected Matrix signalMatrix;
-	protected int[] sparsityMatrix; //holds the sparsity of each column vector
-	private int SIGNAL_LENGTH = 1024; //number of rows in the signal
+	/**
+	holds the sparcity of each column vector
+	*/
+	protected int[] sparsityMatrix;
+	/**
+	number of rows in the signal
+	*/
+	private int SIGNAL_LENGTH = 1024;
 	private final int NUM_MEASUREMENTS = 240;
 
 	public Signal(File matrixFile){
@@ -49,8 +57,10 @@ public class Signal {
 	public Matrix getMeasurements(){
 
 		Matrix gaussDistMatrix = new SparseMatrix(getNumMeasurements(), getSignalLength());
-		//form a matrix similar to the way Matlab uses randn(x) to create a matrix
-		//based on a normal distribution
+		/**
+		form a matrix similar to the way Matlab uses randn(x) to create a matrix
+		based on a normal distribution
+		*/
 		gaussDistMatrix = MatrixHelper.randN(gaussDistMatrix);
 		double x = (1 / Math.sqrt(getNumMeasurements()));
 
@@ -64,31 +74,43 @@ public class Signal {
 
 		setSignalLength(finalMatrix.rowSize());
 
-		//reconstruct one column vector at a time
+		/**
+		reconstruct one column vector at a time
+		*/
 		for(int i = 0; i < signalMatrix.columnSize(); i++){
 
-			//create column vector that is a random permutation of numbers 1 through signal_length
+			/**
+			create column vector that is a random permutation of numbers 1 through signal_length
+			*/
 			Matrix randomMatrix = new SparseMatrix(this.getSignalLength(), 1);
 			randomMatrix = MatrixHelper.randomPermutation(randomMatrix);
 
 			Matrix slicedMatrix = MatrixHelper.getColumn(signalMatrix, i);
 
-			//measurements
+			/**
+			measurements
+			*/
 			Matrix phiMatrix = getMeasurements();
 			Matrix measurementMatrix = phiMatrix.times(slicedMatrix);
 
-			//reconstruct using the cosamp algorithm
+			/**
+			reconstruct using the cosamp algorithm
+			*/
 			Matrix xHat = SignalHelper.cosampAlgo(this, measurementMatrix, phiMatrix, 
 					getSparsityMatrix(i), numIterations);
 
-			//set column in the final matrix to reflect reconstructed vector
+			/**
+			set column in the final matrix to reflect reconstructed vector
+			*/
 			finalMatrix = MatrixHelper.fillColumn(finalMatrix, xHat ,i);
 		}
 
 		return finalMatrix;
 	}
 
-	//create a matrix from the signal represented in the file
+	/**
+	create a matrix from the signal represented in the file
+	*/
 	public void matrixFromFile(File fileName){
 		int rowNumber = 0;
 
@@ -98,12 +120,16 @@ public class Signal {
 			while ((currentLine = br.readLine()) != null) {
 				String[] columnValues = currentLine.split("\t");
 
-				//initialize sparsity matrix on the first turn
+				/**
+				initialize sparsity matrix on the first turn
+				*/
 				if(rowNumber == 0){
 					sparsityMatrix = new int[columnValues.length];
 				}
 
-				//build the signal matrix from the values in the file
+				/**
+				build the signal matrix from the values in the file
+				*/
 				if(columnValues.length == 1){
 					signalMatrix.set(rowNumber, 0, Double.parseDouble(columnValues[0]));
 					if(signalMatrix.get(rowNumber, 0) != 0){
@@ -120,15 +146,20 @@ public class Signal {
 				}
 				rowNumber++;
 			}
-			setSignalLength(rowNumber); //set the signal length for this matrix
+			/**
+			set the signal length for this matrix
+			*/
+			setSignalLength(rowNumber);
 			br.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	//finds the number of columns in a row,
-	//this is important to create matrices with the correct dimensions
+	/**
+	finds the number of columns in a row,
+	this is important to create matrices with the correct dimensions
+	*/
 	public static int getNumColumns(File matrixFile){
 		int count = 0;
 
