@@ -2,4 +2,6 @@
 *.aux
 *.dvi
 *.log
+.DS_Store
+*.bak
 
