@@ -115,7 +115,9 @@ same thing as these functions in Matlab. There were also many other matrix
 manipulations functions that involved slicing and rearranging matrices that 
 we had to write in Java. For example, for the following line of Matlab code:
 
+\begin{math}
 	x(v(1:K)) = randn(K,1);
+\end{math}
 
 I wrote the function in Java called setCellValues() that assigns the 
 values in the randn() matrix to the cells of the matrix x that are 
@@ -135,7 +137,7 @@ these reconstructed columns are combined to create a new matrix that is
 almost identical to the original (allowing for a very small error rate).  
 New measurements need to be taken on each turn of the algorithm based on 
 the values of the column vector and this measurement matrix is used in 
-the reconstruction algorithm. Although we didn’t get a chance to distribute 
+the reconstruction algorithm. Although we did not get a chance to distribute 
 the matrix reconstruction using Hadoop, we have laid out a foundation for 
 how that distribution could be accomplished. 
 
@@ -208,7 +210,7 @@ the exact same thing as the corresponding Matlab code.
 The recent addition to the testing framework is the test cases that we 
 have created. We created an input folder with different test cases as 
 input to the cosamp algorithm. There are several different test 
-cases – two full matrices with different sparsities, two column vectors, 
+cases: two full matrices with different sparsities, two column vectors, 
 a column vector with only zeros and a single cell with a zero.  We also 
 have an output folder that includes the results after the reconstruction, 
 which we obtained by running the algorithm in Matlab. The test then runs 
@@ -264,7 +266,7 @@ decisions in adapting the project over the course of the semester.
 September 27th - Finished analyzing the different compressive sensing recovery 
 	algorithms that we had in Matlab. Read the research papers associated 
 	with the various compressive sensing algorithms. Decided to implement 
-	the CoSamp algorithm.
+	the CoSaMP algorithm.
 
 October 4th - Evaluated many different Java libraries for doing matrix 
 	operations and decided to use Mahout. Setup Mahout and ran some tests 
@@ -310,7 +312,7 @@ December 8th - Added more documentation, finished refactoring. Began to work
 \hline
 \textbf{Matlab} & \textbf{Java} & \textbf{JUnit}\\
 \hline
-sort( ,’Descending’) & sortDescending() & sortDescTest()\\
+sort(Descending) & sortDescending() & sortDescTest()\\
 \hline
 abs() & getAbsMatrix() & absValueTest()\\
 \hline
@@ -357,7 +359,7 @@ xhat = xcosamp(:,end) & getLastColumn() & getLastColumnTest() \\
 \hline
 \textbf{Matlab} & \textbf{Description}\\
 \hline
-sort( ,’Descending’) & Sort each column in the matrix so the values are in 
+sort(Descending) & Sort each column in the matrix so the values are in 
 						descending order\\
 \hline
 abs() & Converts each element in the matrix to its absolute value\\
