@@ -124,27 +124,107 @@ indicated by the rows in matrix v.
 \section{Distributing the Algorithm}
 
 After the midterm presentation, our next goal was to examine the 
-algorithm and to find ways to distribute the reconstruction of the matrix. During the midterm presentation, we showed how the CoSaMP algorithm was successful in reconstructing a column vector, but we needed to prove that it would also work for a full matrix. Therefore, we created a 1024x10 matrix and determined that the only way to successfully reconstruct the entire matrix would be to do so one column at a time. During each of the ten loops, another column is reconstructed and these reconstructed columns are combined to create a new matrix that is almost identical to the original (allowing for a very small error rate).  New measurements need to be taken on each turn of the algorithm based on the values of the column vector and this measurement matrix is used in the reconstruction algorithm. Although we didn’t get a chance to distribute the matrix reconstruction using Hadoop, we have laid out a foundation for how that distribution could be accomplished. 
+algorithm and to find ways to distribute the reconstruction of the matrix. 
+During the midterm presentation, we showed how the CoSaMP algorithm 
+was successful in reconstructing a column vector, but we needed to 
+prove that it would also work for a full matrix. Therefore, we 
+created a 1024x10 matrix and determined that the only way to successfully 
+reconstruct the entire matrix would be to do so one column at a time. 
+During each of the ten loops, another column is reconstructed and 
+these reconstructed columns are combined to create a new matrix that is 
+almost identical to the original (allowing for a very small error rate).  
+New measurements need to be taken on each turn of the algorithm based on 
+the values of the column vector and this measurement matrix is used in 
+the reconstruction algorithm. Although we didn’t get a chance to distribute 
+the matrix reconstruction using Hadoop, we have laid out a foundation for 
+how that distribution could be accomplished. 
 
-Another important step during this phase of the project was that we made the algorithm more dynamic. The original Matlab algorithm, which was identical to what we presented during the midterm presentation, included hard-coded figures for signal length, signal sparsity and the number of measurements necessary for reconstruction. One of the key improvements to our algorithm is that we dynamically set the signal length at the beginning of the algorithm and dynamically set the signal sparsity at each turn based on the sparsity of the column vector. These changes are an improvement over the original Matlab code and were necessary for a full matrix reconstruction to work properly since the sparsity of individual columns might be different. The one number that is still hard-coded is the number of measurements needed for the reconstruction. It was unclear how this number is determined, so it made sense to leave it as is for the time being.
+Another important step during this phase of the project was that we made 
+the algorithm more dynamic. The original Matlab algorithm, which was 
+identical to what we presented during the midterm presentation, 
+included hard-coded figures for signal length, signal sparsity and the number 
+of measurements necessary for reconstruction. One of the key improvements to 
+our algorithm is that we dynamically set the signal length at the beginning 
+of the algorithm and dynamically set the signal sparsity at each turn based 
+on the sparsity of the column vector. These changes are an improvement over 
+the original Matlab code and were necessary for a full matrix reconstruction 
+to work properly since the sparsity of individual columns might be different. 
+The one number that is still hard-coded is the number of measurements needed 
+for the reconstruction. It was unclear how this number is determined, so it 
+made sense to leave it as is for the time being.
 
 \section{Discrete Wavelength Transform}
 
-One of our goals for the project was to be able to reconstruct an image using our algorithm. We found a different algorithm in the Rice Compressive Sensing toolbox that reconstructed an image using discrete wavelength transforms \cite{dwt}.  This algorithm uses Daubechies wavelets. Discrete wavelength transform “is used for signal coding, to represent a discrete signal in a more redundant form, often as a preconditioning for data compression.” We hypothesized that we might be able to use the first part of this algorithm to do the transforms and then we could use CoSaMP to recover the original image. 
+One of our goals for the project was to be able to reconstruct an image 
+using our algorithm. We found a different algorithm in the Rice Compressive 
+Sensing toolbox that reconstructed an image using discrete wavelength 
+transforms \cite{dwt}.  This algorithm uses Daubechies wavelets. Discrete 
+wavelength transform “is used for signal coding, to represent a discrete 
+signal in a more redundant form, often as a preconditioning for data 
+compression. We hypothesized that we might be able to use the first 
+part of this algorithm to do the transforms and then we could use 
+CoSaMP to recover the original image. 
 
-As we investigated this algorithm, it became clear that there were several important hurdles that we would not be able to overcome in the remaining time frame. Our objective was to integrate the wavelength transform with the cosamp recovery, but it turned out that the wavelength transform was more complex than we had original anticipated and it was not even clear if we would be able to integrate the two approaches. There were several steps in the wavelength transform that were difficult to implement in Java. For example, we could not find a function in Java that accomplishes what Matlab does in the rgb2gray() function. In addition, there were two or three Matlab functions (roots(), poly(), conv()) that I did not figure out how to implement in Java. They involve finding the roots of a polynomial. There could be elements to the 5th or 6th power and the solutions are often complex numbers, which made it difficult to find the right solution in Java.
+As we investigated this algorithm, it became clear that there were 
+several important hurdles that we would not be able to overcome in the 
+remaining time frame. Our objective was to integrate the wavelength transform 
+with the cosamp recovery, but it turned out that the wavelength transform was 
+more complex than we had original anticipated and it was not even clear if 
+we would be able to integrate the two approaches. There were several steps 
+in the wavelength transform that were difficult to implement in Java. For 
+example, we could not find a function in Java that accomplishes what Matlab 
+does in the rgb2gray() function. In addition, there were two or three Matlab 
+functions (roots(), poly(), conv()) that I did not figure out how to 
+implement in Java. They involve finding the roots of a polynomial. 
+There could be elements to the 5th or 6th power and the solutions are often 
+complex numbers, which made it difficult to find the right solution in Java.
 
 \section{Test Cases}
 
-I have used JUnit to write test cases for all the code. As I came across specific functions in Matlab that are not yet implemented in Mahout, I had to first determine what this function did and then I had to write the necessary code in Java to match the function in Matlab. Before writing the function, I would write a test case using JUnit that I could run after writing the function to make sure it was working properly. At the end of this report is a table that includes a Matlab function from the algorithm, a corresponding Java function I have written (in MatrixHelper.java) that is equivalent to the Matlab function and the test case I have written (in SignalTesting.java) for my code. NOTE: Some parameters have been removed to make the table more readable.
+I have used JUnit to write test cases for all the code. As I came across 
+specific functions in Matlab that are not yet implemented in Mahout, I had 
+to first determine what this function did and then I had to write the necessary 
+code in Java to match the function in Matlab. Before writing the function, 
+I would write a test case using JUnit that I could run after writing the 
+function to make sure it was working properly. At the end of this report 
+is a table that includes a Matlab function from the algorithm, a 
+corresponding Java function I have written (in MatrixHelper.java) that 
+is equivalent to the Matlab function and the test case I have written 
+(in SignalTesting.java) for my code. NOTE: Some parameters have been 
+removed to make the table more readable.
 
-After we chose to move past the discrete wavelength transform for the time being, we decided that with the remaining time it made sense to focus on creating a robust framework for testing the algorithm and refactoring much of the existing code. This would ensure that the algorithm is complete and would make it much easier to extend or build upon the work we have done this semester in the future. 
+After we chose to move past the discrete wavelength transform for the time 
+being, we decided that with the remaining time it made sense to focus on 
+creating a robust framework for testing the algorithm and refactoring much 
+of the existing code. This would ensure that the algorithm is complete and 
+would make it much easier to extend or build upon the work we have done 
+this semester in the future. 
 
-I have been writing unit tests over the course of the semester for the functions that I wrote to simulate Matlab functionality. There are currently 16 tests in SignalTesting.java that make sure these functions are doing the exact same thing as the corresponding Matlab code.
+I have been writing unit tests over the course of the semester for the 
+functions that I wrote to simulate Matlab functionality. There are currently 
+16 tests in SignalTesting.java that make sure these functions are doing 
+the exact same thing as the corresponding Matlab code.
 
-The recent addition to the testing framework is the test cases that we have created. We created an input folder with different test cases as input to the cosamp algorithm. There are several different test cases – two full matrices with different sparsities, two column vectors, a column vector with only zeros and a single cell with a zero.  We also have an output folder that includes the results after the reconstruction, which we obtained by running the algorithm in Matlab. The test then runs a matrix created from each input file through the algorithm and compares this matrix to the expected matrix in the output folder. As long as the different between values in each cell is within our error rate, the test passes. The good thing about the structure of our framework is that all you have to do is add an input file and an expected output file and the test will automatically run the algorithm on that matrix and compare the results.
+The recent addition to the testing framework is the test cases that we 
+have created. We created an input folder with different test cases as 
+input to the cosamp algorithm. There are several different test 
+cases – two full matrices with different sparsities, two column vectors, 
+a column vector with only zeros and a single cell with a zero.  We also 
+have an output folder that includes the results after the reconstruction, 
+which we obtained by running the algorithm in Matlab. The test then runs 
+a matrix created from each input file through the algorithm and compares 
+this matrix to the expected matrix in the output folder. As long as the 
+different between values in each cell is within our error rate, the test 
+passes. The good thing about the structure of our framework is that all 
+you have to do is add an input file and an expected output file and the 
+test will automatically run the algorithm on that matrix and compare the results.
 
-The last step in the project was to refactor the existing code/classes and to add more documentation. I refactored the Signal class to be much more clean and to have more concise methods. I also added more documentation to the individual matrix functions and to the cosamp specific methods. When appropriate, I added the corresponding line of Matlab code to give better insight into the algorithm.
+The last step in the project was to refactor the existing code/classes 
+and to add more documentation. I refactored the Signal class to be much 
+more clean and to have more concise methods. I also added more documentation 
+to the individual matrix functions and to the cosamp specific methods. 
+When appropriate, I added the corresponding line of Matlab code to give better 
+insight into the algorithm.
 
 \section{Conclusion}
 
