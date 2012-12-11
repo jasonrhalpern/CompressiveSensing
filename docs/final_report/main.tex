@@ -26,7 +26,7 @@ Compressive Sampling is about acquiring and recovering a sparse signal in an eff
 manner. It involves finding the number of measurements that are necessary to reconstruct
 the signal. The goal of the project is to research and explore several compressive
 sampling algorithms and to determine which algorithm is the best choice to implement in
-a distributed manner. 				
+a distributed manner. After choosing an algorithm and implementing it in Java, we will look for ways to distribute the algorithm and we hope to be able to reconstruct an image across the cloud using our recovery algorithm.			
 
 \section{Choosing a Compressive Sensing Algorithm}
 
@@ -192,8 +192,8 @@ function to make sure it was working properly. At the end of this report
 is a table that includes a Matlab function from the algorithm, a 
 corresponding Java function I have written (in MatrixHelper.java) that 
 is equivalent to the Matlab function and the test case I have written 
-(in SignalTesting.java) for my code. NOTE: Some parameters have been 
-removed to make the table more readable.
+(in SignalTesting.java) for my code\footnote{Some parameters have been 
+removed to make the table more readable}.
 
 After we chose to move past the discrete wavelength transform for the time 
 being, we decided that with the remaining time it made sense to focus on 
@@ -406,6 +406,24 @@ length() & Returns either the number of rows or the number of columns,
 xcosamp(:,kk+1:end)=[] & Remove all columns between (kk+1) and end\\
 \hline
 xhat = xcosamp(:,end) & Return the last column of a matrix\\
+\hline
+\end{tabular}
+\end{table}
+
+\onecolumn
+\begin{table}[t]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{} & \textbf{Java} & \textbf{Matlab}\\
+\hline
+Matrix Size & 1024x1 & 1024x1\\
+\hline
+Avg. Execution Time (sec) & 2.564 & 0.166\\
+\hline
+Min. Execution Time (sec) & 2.022 & 0.154\\
+\hline
+Max. Execution Time (sec) & 3.016 & 0.223\\
 \hline
 \end{tabular}
 \end{table}
