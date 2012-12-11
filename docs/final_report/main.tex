@@ -52,7 +52,7 @@ at the other algorithms to quickly gauge their complexity as well.
 
 I also looked at several other factors when evaluating the algorithms. Two of the main
 factors were the amount of documentation in the code and the inclusion of a research
-paper that we could read in conjunction with the code. We chose the cosamp algorithm
+paper that we could read in conjunction with the code. We chose the CoSaMP algorithm
 because it was well documented, complete and included the following paper, {\em CoSaMP:
 iterative signal recovery from complete and inaccurate measurements}, written by Needell
 and Tropp at the California Institute of Technology \cite{needell:2010}. In addition,
@@ -170,7 +170,7 @@ CoSaMP to recover the original image.
 As we investigated this algorithm, it became clear that there were 
 several important hurdles that we would not be able to overcome in the 
 remaining time frame. Our objective was to integrate the wavelength transform 
-with the cosamp recovery, but it turned out that the wavelength transform was 
+with the CoSaMP recovery, but it turned out that the wavelength transform was 
 more complex than we had original anticipated and it was not even clear if 
 we would be able to integrate the two approaches. There were several steps 
 in the wavelength transform that were difficult to implement in Java. For 
@@ -209,14 +209,14 @@ the exact same thing as the corresponding Matlab code.
 
 The recent addition to the testing framework is the test cases that we 
 have created. We created an input folder with different test cases as 
-input to the cosamp algorithm. There are several different test 
+input to the CoSaMP algorithm. There are several different test 
 cases: two full matrices with different sparsities, two column vectors, 
 a column vector with only zeros and a single cell with a zero.  We also 
 have an output folder that includes the results after the reconstruction, 
 which we obtained by running the algorithm in Matlab. The test then runs 
 a matrix created from each input file through the algorithm and compares 
 this matrix to the expected matrix in the output folder. As long as the 
-different between values in each cell is within our error rate, the test 
+difference between values in each cell is within our error rate, the test 
 passes. The good thing about the structure of our framework is that all 
 you have to do is add an input file and an expected output file and the 
 test will automatically run the algorithm on that matrix and compare the results.
@@ -224,7 +224,7 @@ test will automatically run the algorithm on that matrix and compare the results
 The last step in the project was to refactor the existing code/classes 
 and to add more documentation. I refactored the Signal class to be much 
 more clean and to have more concise methods. I also added more documentation 
-to the individual matrix functions and to the cosamp specific methods. 
+to the individual matrix functions and to the CoSaMP specific methods. 
 When appropriate, I added the corresponding line of Matlab code to give better 
 insight into the algorithm.
 
@@ -286,13 +286,13 @@ November 6th - Modified the algorithm such that it works on full matrices
 	it is reconstructed.
 
 November 18th - Attempted to reconstruct an entire image using a combination 
-	of the discrete wavelength transform and the cosamp implementation. 
+	of the discrete wavelength transform and the CoSaMP implementation. 
 	Had difficulty moving certain aspects of the wavelength transform to Java.
 
 November 23rd - Refactored a lot of the code. Created more concise methods, 
 	renamed some variables, created a Signal class to better encapsulate 
 	the information specific to the signal matrix. Modified the methods 
-	related to the cosamp algorithm to be more clear.
+	related to the CoSaMP algorithm to be more clear.
 
 November 30th - Created a testing framework that makes it easy to add new 
 	test cases without modifying the code. Created input files and 
