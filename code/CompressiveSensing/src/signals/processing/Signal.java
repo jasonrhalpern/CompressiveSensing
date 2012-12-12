@@ -35,7 +35,8 @@ public class Signal {
 	public Signal(File matrixFile){
 
 		int numColumns = getNumColumns(matrixFile);
-		signalMatrix = new SparseMatrix(getSignalLength(), numColumns);
+		int numRows = getNumRows(matrixFile);
+		signalMatrix = new SparseMatrix(numRows, numColumns);
 		signalMatrix = MatrixHelper.fillWithZeros(signalMatrix);
 		matrixFromFile(matrixFile);
 	}
@@ -201,6 +202,30 @@ public class Signal {
 				String[] columnValues = currentLine.split("\t");
 
 				return columnValues.length;
+			}
+			br.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+		return count;
+	}
+	
+	/**
+	 * Finds the number of columns in a row,
+	 * this is important to create matrices with the correct dimensions.
+	 * 
+	 * @param matrixFile - file that includes the matrix
+	 * @return the number of rows in the matrix
+	 */
+	public static int getNumRows(File matrixFile){
+		int count = 0;
+
+		BufferedReader br = null;
+		try {
+			String currentLine;
+			br = new BufferedReader(new FileReader(matrixFile));
+			while ((currentLine = br.readLine()) != null) {
+				count++;
 			}
 			br.close();
 		} catch (IOException e) {

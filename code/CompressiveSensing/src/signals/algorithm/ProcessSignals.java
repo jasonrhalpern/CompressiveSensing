@@ -2,6 +2,10 @@ package signals.algorithm;
 
 import java.io.File;
 
+import matrix.MatrixHelper;
+
+import org.apache.mahout.math.Matrix;
+
 import signals.processing.Signal;
 
 /**
@@ -39,10 +43,11 @@ public class ProcessSignals {
 	public static void main(String[] args){
 		
 		//run the cosamp algorithm on the signal represented in the file
-		Signal sparseSignal = new Signal(new File("xMatrix.txt"));
-		long startTime = System.nanoTime();
-		sparseSignal.runCosamp(NUM_ITERATIONS);
-		long endTime = System.nanoTime();
+		Signal sparseSignal = new Signal(new File("nMatrix.txt"));
+		long startTime = System.currentTimeMillis();
+		Matrix reconstructedMatrix = sparseSignal.runCosamp(NUM_ITERATIONS);
+		MatrixHelper.printMatrix(reconstructedMatrix);
+		long endTime = System.currentTimeMillis();
 		long duration = endTime - startTime;
 		System.out.println(duration);
 	}
