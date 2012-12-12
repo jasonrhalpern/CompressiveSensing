@@ -222,7 +222,7 @@ public class MatrixHelper {
 	 * @param currentMatrix - values from the first column of this matrix are retrieved and then set in 
 	 * the given column of finalMatrix.
 	 * @param colNum - the column in finalMatrix that should be filled
-	 * @return
+	 * @return the new matrix with the modified column
 	 */
 	public static Matrix fillColumn(Matrix finalMatrix, Matrix currentMatrix, int colNum){
 
@@ -337,7 +337,7 @@ public class MatrixHelper {
 	 * Similar to the x = x(:) operation in Matlab.
 	 * 
 	 * @param mtrx - the matrix that will be transformed into a single column vector
-	 * @return
+	 * @return the column vector
 	 */
 	public static Matrix toSingleColumn(Matrix mtrx){
 
