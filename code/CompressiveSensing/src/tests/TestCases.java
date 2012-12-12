@@ -1,5 +1,3 @@
-/** \file
-*/
 package tests;
 
 import java.io.File;
@@ -14,24 +12,27 @@ import org.junit.Test;
 import signals.algorithm.ProcessSignals;
 import signals.processing.Signal;
 
-/** 
-Test cases include various matrices and column vectors to make sure 
-that the algorithm is functioning properly.
-*/
+/**
+ * Test cases include various matrices and column vectors to make sure that 
+ * the algorithm is functioning properly. To add more test cases, you only need
+ * to add a new input file to the test.input folder and the expected results to
+ * the test.output folder before running this test, the code does not need to be
+ * modified.
+ * 
+ * @author Jason Halpern
+ * @version 1.0 12/09/12
+ *
+ */
 public class TestCases extends TestCase{
 
 	@Test 
 	public void testCaseOne(){
 
-		/** 
-		grab all the test input files 
-		*/
+		//grab all the test input files
 		File folder = new File("src/tests/input");
 		File[] listOfFiles = folder.listFiles();
-		/** 
-		run the matrix or vector from each file through the algorithm and 
-		compare with the results files to make sure it is correct
-		*/
+		//run the matrix or vector from each file through the algorithm and 
+		//compare with the results files to make sure it is correct
 		for(File f : listOfFiles){
 			Signal sparse = new Signal(f);
 			Matrix one = sparse.runCosamp(ProcessSignals.getNumIterations());
@@ -47,15 +48,11 @@ public class TestCases extends TestCase{
 			int numRows = two.rowSize();
 			int numCols = two.columnSize();
 
-			/**
-			write results to file
-			*/
+			//write results to file
 			MatrixHelper.writeToFile(tempFile, one);
 
-			/**
-			acceptable deviation during signal reconstruction from the original value,
-			this is because reconstruction will not be exact
-			*/
+			//acceptable deviation during signal reconstruction from the original value,
+			//this is because reconstruction will not be exact
 			double ERROR_RATE = 0.065;
 			
 			for(int row = 0; row < numRows; row++){

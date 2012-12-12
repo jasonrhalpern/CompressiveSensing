@@ -1,5 +1,3 @@
-/** \file
-*/
 package signals.processing;
 
 import org.apache.mahout.math.Matrix;

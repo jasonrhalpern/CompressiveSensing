@@ -1,5 +1,3 @@
-/** \file
-*/
 package matrix;
 
 import org.apache.mahout.math.Matrix;
@@ -8,9 +6,24 @@ import org.apache.mahout.math.SparseMatrix;
 import signals.algorithm.ProcessSignals;
 import signals.processing.Signal;
 
+/**
+ * Includes all the functions for the implementation of the CoSaMP algorithm
+ * 
+ * @author Jason Halpern
+ * @version 1.0 12/09/12
+ */
 public class SignalHelper {
 
-	//implementation of cosamp algorithm, follows cosamp.m from the Rice Compressive Sensing toolbox
+	/**
+	 * Implementation of cosamp algorithm, follows cosamp.m from the Rice Compressive Sensing toolbox.
+	 * 
+	 * @param sparse - the sparse object that will be reconstructed from the CoSaMP algorithm.
+	 * @param measurementMatrix - measurements taken to reconstruct the signal.
+	 * @param phiMatrix
+	 * @param signalSparsity - sparsity of the signal.
+	 * @param iterations - max number of iterations for the algorithm.
+	 * @return the reconstructed matrix
+	 */
 	public static Matrix cosampAlgo(Signal sparse, Matrix measurementMatrix, Matrix phiMatrix,
 			int signalSparsity, int iterations){
 
@@ -76,6 +89,14 @@ public class SignalHelper {
 		return xHatMatrix;
 	}
 	
+	/**
+	 * Test to see if the algorithm should end now or if it should continue for more iterations
+	 * 
+	 * @param xCosampMatrix - contains the column vector we are testing
+	 * @param signalLength - length of the signal
+	 * @param count - the specific iteration we are at
+	 * @return true if the algorithm should end, false if it should continue
+	 */
 	public static boolean testBreakpoint(Matrix xCosampMatrix, int signalLength, int count){
 		
 		Matrix slicedXCosampMatrixOne = new SparseMatrix(signalLength, 1);
@@ -93,7 +114,15 @@ public class SignalHelper {
 		return false;
 	}
 
-	//The Matlab code for this can be found in cosamp.m, starting at line 38
+	/**
+	 * The Matlab code for this can be found in cosamp.m, starting at line 38
+	 * 
+	 * @param phiMatrix
+	 * @param sCosampMatrix
+	 * @param measurementMatrix
+	 * @param sparsity
+	 * @return a matrix that is a projection to use for the estimation phase
+	 */
 	public static Matrix backProjection(Matrix phiMatrix, Matrix sCosampMatrix, 
 			Matrix measurementMatrix, int sparsity){
 
@@ -112,7 +141,16 @@ public class SignalHelper {
 		return MatrixHelper.union(findMatrix, indiceMatrix);
 	}
 
-	//corresponds to the function in cgsolve.m, step-by-step
+	/**
+	 * Corresponds to the function in cgsolve.m, step-by-step
+	 * 
+	 * @param firstMatrix
+	 * @param secondMatrix
+	 * @param tolerance
+	 * @param maxIterations
+	 * @param verbose
+	 * @return a matrix that is an estimate to be used in reconstruction
+	 */
 	public static Matrix cgSolve(Matrix firstMatrix, Matrix secondMatrix,
 			double tolerance, int maxIterations, int verbose){
 
